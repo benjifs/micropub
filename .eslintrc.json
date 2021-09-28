@@ -1,0 +1,17 @@
+{
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "comma-dangle": 0,
+    "indent": [ 2, "tab" ],
+    "no-trailing-spaces": "error",
+    "semi": [2, "never"],
+    "quotes": ["error", "single"]
+  }
+}

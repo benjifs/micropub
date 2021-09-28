@@ -1,0 +1,20 @@
+
+[functions]
+	node_bundler = "esbuild"
+	external_node_modules = ["keyv"]
+
+[build]
+	command = "npm run build"
+	functions = "lambda"
+	publish = "public"
+
+[template.environment]
+	GIT_TOKEN = "Personal Access Token"
+	GIT_BRANCH = "Branch name to add posts to (Must already exist)"
+	GITHUB_USER = "Username for repo where posts are added to (GitHub)"
+	GITHUB_REPO = "Name of repo where posts are added to (GitHub)"
+	GITLAB_PROJECT_ID = "Project ID for the repo posts are added to (GitLab)"
+	ME = "Your website url (https://domain.tld/)"
+	TOKEN_ENDPOINT = "Endpoint to validate Token"
+	CONTENT_DIR="Directory where posts are uploaded to"
+	IMAGE_DIR="Directory where media is uploaded to"

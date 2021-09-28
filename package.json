@@ -1,0 +1,44 @@
+{
+  "name": "micropub",
+  "version": "1.0.0",
+  "description": "Serverless Micropub and media endpoints to publish to static site",
+  "main": "src/micropub.js",
+  "scripts": {
+    "clean": "rm -rf node_modules lambda",
+    "serve": "netlify-lambda serve src",
+    "esbuild": "esbuild src/*.js --bundle --outdir=lambda --platform=node",
+    "build": "netlify-lambda build src",
+    "lint": "eslint src/**/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benjifs/micropub.git"
+  },
+  "keywords": [
+    "indieweb",
+    "micropub",
+    "netlify",
+    "lambda",
+    "serverless"
+  ],
+  "author": "Benji Encalada Mora <b@encalada.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/benjifs/micropub/issues"
+  },
+  "homepage": "https://github.com/benjifs/micropub",
+  "dependencies": {
+    "@middy/core": "^2.5.1",
+    "@middy/http-error-handler": "^2.5.1",
+    "@middy/http-json-body-parser": "^2.5.1",
+    "@middy/http-multipart-body-parser": "^2.5.1",
+    "@middy/http-urlencode-body-parser": "^2.5.1",
+    "dotenv": "^10.0.0",
+    "front-matter": "^4.0.2",
+    "got": "^11.8.2",
+    "netlify-lambda": "^2.0.14"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  }
+}

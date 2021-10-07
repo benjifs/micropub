@@ -20,6 +20,9 @@ const Auth = {
 	isAuthorized: async (headers, body, required_scope) => {
 		console.log('HEADERS:', headers)
 		console.log('BODY:', body)
+		if (headers.authorization && headers.authorization.split(' ')[1] && body.access_token) {
+			return Error.INVALID
+		}
 		const token = (headers.authorization && headers.authorization.split(' ')[1]) || body.access_token
 		if (!token) {
 			return Error.UNAUTHORIZED

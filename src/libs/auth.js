@@ -10,9 +10,10 @@ const Auth = {
 				headers: {
 					accept: 'application/json',
 					Authorization: `Bearer ${token}`
-				}
+				},
+				responseType: 'json'
 			})
-			return body && JSON.parse(body)
+			return body
 		} catch (err) {
 			console.error(err)
 		}

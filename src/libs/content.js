@@ -14,6 +14,7 @@ export default {
 		console.log('parse:', content)
 		const { attributes, body } = fm(content.toString())
 		return {
+			type: attributes.type || 'h-entry',
 			date: attributes.date.toISOString(),
 			title: attributes.title,
 			tags: attributes.tags,

@@ -12,7 +12,7 @@ import auth from './libs/auth'
 import source from './libs/source'
 import publish from './libs/publish'
 import { Error, Response } from './libs/response'
-// q=source&properties%5B%5D=content&properties%5B%5D=category&url=https%3A%2F%2Fbenji.dog%2Fnotes%2F1632514908
+
 const getHandler = async query => {
 	let res
 	if (query.q === 'config') {

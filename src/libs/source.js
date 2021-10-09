@@ -7,10 +7,12 @@ const parsedToSource = (parsed, properties) => {
 	const source = {
 		'type': parsed.type,
 		'properties': {
-			'published': [parsed.date],
+			'name': parsed.title,
+			'summary': parsed.summary,
 			'content': [parsed.content],
-			'category': parsed.tags,
-			'title': parsed.title
+			'published': [parsed.date],
+			'updated': [parsed.updated],
+			'category': parsed.tags
 		}
 	}
 	if (properties) {

@@ -1,6 +1,7 @@
 
 import GitHub from './github'
 import content from './content'
+import parse from './parse'
 import { utils } from './utils'
 
 export default {
@@ -11,18 +12,22 @@ export default {
 				data.content = `![](/${upload})\n\n${data.content}`
 			}
 		}
-		const formatted = utils.format(json ? utils.parseJSON(data) : data)
-		console.log('└─>', formatted)
-		if (!formatted.content) {
+		const parsed = json ? parse.fromJSON(data) : parse.fromForm(data)
+		console.log('└─>', parsed)
+		if (!parsed || !parsed.content) {
 			return { 'error': 'content is empty' }
 		}
-		const exists = await GitHub.getFile(formatted.filename)
+		const out = content.format(parsed)
+		if (!out || !out.filename || !out.formatted) {
+			return { 'error': 'could not parse data' }
+		}
+		const exists = await GitHub.getFile(out.filename)
 		if (exists) {
 			return { 'error': 'file exists' }
 		}
-		const filename = await GitHub.createFile(formatted.filename, content.output(formatted))
+		const filename = await GitHub.createFile(out.filename, out.formatted)
 		if (filename) {
-			return { 'filename': formatted.slug }
+			return { 'filename': out.slug }
 		}
 	},
 	updateContent: async (url, body) => {
@@ -34,16 +39,25 @@ export default {
 		if (!exists) {
 			return { 'error': 'file does not exist' }
 		}
-		const parsed = content.parse(exists.content)
+		let parsed = parse.fromFrontMatter(exists.content)
 		if (!parsed) {
 			return { 'error': 'could not parse file' }
 		}
-		if (body.replace && body.replace.content) {
-			parsed.content = utils.stringFromProp(body.replace.content)
-		} else {
+		if (!body.replace || !body.replace.content) {
 			return { 'error': 'nothing  to update' }
 		}
-		const res = await GitHub.updateFile(filename, content.output(parsed), exists)
+		const replace = utils.removeEmpty(parse.fromJSON({
+			'type': parsed.type,
+			'properties': body.replace
+		}))
+		// Merge properties from `replace` into `parsed`
+		parsed = { ...parsed, ...replace }
+
+		const out = content.format(parsed)
+		if (!out || !out.filename || !out.formatted) {
+			return { 'error': 'could not parse data' }
+		}
+		const res = await GitHub.updateFile(filename, out.formatted, exists)
 		if (!res) {
 			return { 'error': 'file cannot be updated'}
 		}

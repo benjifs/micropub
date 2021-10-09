@@ -33,6 +33,7 @@ const Auth = {
 			return Error.FORBIDDEN
 		}
 		const valid_scopes = auth.scope.split(' ')
+		// Checks if at least one of the values in `required_scope` is in `valid_scopes`
 		if (!required_scope.split(' ').some(scope => valid_scopes.includes(scope))) {
 			return Error.SCOPE
 		}

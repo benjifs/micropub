@@ -32,7 +32,7 @@ const content = {
 		const type = data.name ? 'posts' : 'notes'
 		let slug
 		if (data.slug) {
-			slug = `${type}/${utils.slugify(slug)}`
+			slug = `${type}/${utils.slugify(data.slug)}`
 		} else {
 			const ts = Math.round(date / 1000)
 			slug = `${type}/${ts}` + (data.name ? `-${utils.slugify(data.name)}` : '')

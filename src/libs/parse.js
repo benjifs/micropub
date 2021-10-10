@@ -32,7 +32,7 @@ export default {
 			'type': form.h ? `h-${form.h}` : null,
 			'content': form.content,
 			'name': form.name,
-			'category': Array.isArray(form.category) ? form.category : [form.category],
+			'category': !form.category ? null : (Array.isArray(form.category) ? form.category : [form.category]),
 			'slug': form['mp-slug'],
 			'status': form['post-status'],
 			'visibility': form.visibility

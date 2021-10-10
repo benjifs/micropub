@@ -4,12 +4,48 @@ import content from './content'
 import parse from './parse'
 import { utils } from './utils'
 
+// If empty -> return empty array
+// If array -> return full array
+// else -> return array of single item
+const getFile = file => {
+	return !file ? [] : (Array.isArray(file) ? file : [file])
+}
+
+const uploadFiles = async data => {
+	if (!data) {
+		return []
+	}
+	let files = [], uploaded = []
+	files = files.concat(getFile(data.photo))
+	files = files.concat(getFile(data.file))
+	files = files.concat(getFile(data['photo[]']))
+	files = files.concat(getFile(data['file[]']))
+	for (let i in files) {
+		let upload
+		if (files[i].filename) {
+			const tmp = await GitHub.uploadImage(files[i])
+			if (tmp) {
+				upload = { 'value': tmp }
+			}
+		} else if (files[i].alt || files[i].value) {
+			upload = files[i]
+		} else {
+			upload = { 'value': files[i] }
+		}
+		upload && uploaded.push(upload)
+	}
+	return uploaded
+}
+
 export default {
 	addContent: async (data, json) => {
-		if (data.photo || data.file) {
-			const upload = await GitHub.uploadImage(data.file || data.photo)
-			if (upload) {
-				data.content = `![](/${upload})\n\n${data.content}`
+		const uploaded = await uploadFiles(data)
+		if (uploaded && uploaded.length) {
+			for (let i in uploaded) {
+				const { alt, value } = uploaded[i]
+				if (value) {
+					data.content = `![${alt || ''}](/${value})\n\n${data.content}`
+				}
 			}
 		}
 		const parsed = json ? parse.fromJSON(data) : parse.fromForm(data)

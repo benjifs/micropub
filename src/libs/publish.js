@@ -4,55 +4,42 @@ import content from './content'
 import parse from './parse'
 import { utils } from './utils'
 
-// If empty -> return empty array
-// If array -> return full array
-// else -> return array of single item
-const getFile = file => {
-	return !file ? [] : (Array.isArray(file) ? file : [file])
-}
-
-const uploadFiles = async data => {
-	if (!data) {
-		return []
-	}
-	let files = [], uploaded = []
-	files = files.concat(getFile(data.photo))
-	files = files.concat(getFile(data.file))
-	files = files.concat(getFile(data['photo[]']))
-	files = files.concat(getFile(data['file[]']))
+const uploadFiles = async files => {
+	const photos = []
 	for (let i in files) {
-		let upload
 		if (files[i].filename) {
-			const tmp = await GitHub.uploadImage(files[i])
-			if (tmp) {
-				upload = { 'value': tmp }
+			const uploaded = await GitHub.uploadImage(files[i])
+			if (uploaded) {
+				photos.push({ 'value': uploaded })
 			}
 		} else if (files[i].alt || files[i].value) {
-			upload = files[i]
+			photos.push(files[i])
 		} else {
-			upload = { 'value': files[i] }
+			photos.push({ 'value': files[i] })
 		}
-		upload && uploaded.push(upload)
 	}
-	return uploaded
+	return photos
 }
 
 export default {
-	addContent: async (data, json) => {
-		const uploaded = await uploadFiles(data)
-		if (uploaded && uploaded.length) {
-			for (let i in uploaded) {
-				const { alt, value } = uploaded[i]
-				if (value) {
-					data.content = `![${alt || ''}](/${value})\n\n${data.content}`
-				}
-			}
-		}
-		const parsed = json ? parse.fromJSON(data) : parse.fromForm(data)
+	addContent: async (data, isJSON) => {
+		const parsed = isJSON ? parse.fromJSON(data) : parse.fromForm(data)
 		console.log('└─>', parsed)
 		if (!parsed || !parsed.content) {
 			return { 'error': 'content is empty' }
 		}
+		const uploaded = await uploadFiles(parsed.photo)
+		if (uploaded && uploaded.length) {
+			let imageContent = ''
+			for (let i in uploaded) {
+				const { alt, value } = uploaded[i]
+				if (value) {
+					imageContent += `![${alt || ''}](/${value})\n\n`
+				}
+			}
+			parsed.content = `${imageContent}${parsed.content}`
+		}
+		console.log(parsed.content)
 		const out = content.format(parsed)
 		if (!out || !out.filename || !out.formatted) {
 			return { 'error': 'could not parse data' }

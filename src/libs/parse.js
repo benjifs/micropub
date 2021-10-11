@@ -20,11 +20,12 @@ export default {
 			return null
 		}
 		const { type, properties } = json
+		const category = itemsToArray(properties.category)
 		return {
 			'type': stringFromProp(type),
 			'content': stringFromProp(properties.content),
 			'name': stringFromProp(properties.name),
-			'category': itemsToArray(properties.category),
+			'category': category.length ? category : null,
 			'photo': itemsToArray(properties.photo),
 			'slug': stringFromProp(properties['mp-slug']),
 			'status': stringFromProp(properties['post-status']),
@@ -36,11 +37,12 @@ export default {
 		if  (!form || !form.h) {
 			return null
 		}
+		const category = itemsToArray(form.category)
 		return {
 			'type': form.h ? `h-${form.h}` : null,
 			'content': form.content,
 			'name': form.name,
-			'category': itemsToArray(form.category),
+			'category': category.length ? category : null,
 			'photo': [
 				// photos could come in as either `photo` or `file`
 				// handle `photo[]` and `file[]` for multiple files for now

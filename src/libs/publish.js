@@ -6,19 +6,60 @@ import { utils } from './utils'
 
 const uploadFiles = async files => {
 	const photos = []
-	for (let i in files) {
-		if (files[i].filename) {
-			const uploaded = await GitHub.uploadImage(files[i])
+	for (let file of files) {
+		if (file.filename) {
+			const uploaded = await GitHub.uploadImage(file)
 			if (uploaded) {
 				photos.push({ 'value': uploaded })
 			}
-		} else if (files[i].alt || files[i].value) {
-			photos.push(files[i])
+		} else if (file.alt || file.value) {
+			photos.push(file)
 		} else {
-			photos.push({ 'value': files[i] })
+			photos.push({ 'value': file })
 		}
 	}
 	return photos
+}
+
+const handleUpdate = (body, parsed) => {
+	if (!body && !body.replace && !body.add && !body.delete) {
+		return
+	}
+	const updates = utils.removeEmpty(parse.fromJSON({
+		'type': parsed.type,
+		'properties': body.replace || body.add || body.delete
+	}))
+	if (!updates || Object.entries(updates).length <= 1) { // `updates` always has property 'type'
+		return
+	}
+	if (body.replace) {
+		return { ...parsed, ...updates }
+	} else if (body.delete && Array.isArray(body.delete)) {
+		for (let key of body.delete) {
+			delete parsed[key]
+		}
+		return parsed
+	} else {
+		for (let [key, value] of Object.entries(updates)) {
+			if (key == 'type' || key == 'photo') { // skip these properties
+				continue
+			}
+			if (body.add) {
+				parsed[key] = parsed[key] || []
+				parsed[key] = [ ...parsed[key], ...updates[key] ]
+			} else if (body.delete && parsed[key] && Array.isArray(parsed[key])) {
+				// Only deletes here if the original value was an array
+				// Look for the specific item to delete from a potential list of values
+				for (let item of value) {
+					// Remove `item` from `parsed[key]` if it exists
+					if (parsed[key].includes(item)) {
+						parsed[key].splice(parsed[key].indexOf(item), 1)
+					}
+				}
+			}
+		}
+		return parsed
+	}
 }
 
 export default {
@@ -31,15 +72,13 @@ export default {
 		const uploaded = await uploadFiles(parsed.photo)
 		if (uploaded && uploaded.length) {
 			let imageContent = ''
-			for (let i in uploaded) {
-				const { alt, value } = uploaded[i]
-				if (value) {
-					imageContent += `![${alt || ''}](/${value})\n\n`
+			for (let img of uploaded) {
+				if (img.value) {
+					imageContent += `![${img.alt || ''}](/${img.value})\n\n`
 				}
 			}
 			parsed.content = `${imageContent}${parsed.content}`
 		}
-		console.log(parsed.content)
 		const out = content.format(parsed)
 		if (!out || !out.filename || !out.formatted) {
 			return { 'error': 'could not parse data' }
@@ -66,17 +105,11 @@ export default {
 		if (!parsed) {
 			return { 'error': 'could not parse file' }
 		}
-		if (!body.replace || !body.replace.content) {
-			return { 'error': 'nothing  to update' }
+		const updated = handleUpdate(body, parsed)
+		if (!updated) {
+			return { 'error': 'nothing to update' }
 		}
-		const replace = utils.removeEmpty(parse.fromJSON({
-			'type': parsed.type,
-			'properties': body.replace
-		}))
-		// Merge properties from `replace` into `parsed`
-		parsed = { ...parsed, ...replace }
-
-		const out = content.format(parsed)
+		const out = content.format(updated)
 		if (!out || !out.filename || !out.formatted) {
 			return { 'error': 'could not parse data' }
 		}

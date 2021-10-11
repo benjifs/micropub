@@ -15,7 +15,7 @@ const utils = {
 
 	removeEmpty: data => {
 		for (let i in data) {
-			if (data[i] === undefined || data[i] === null) {
+			if (data[i] === undefined || data[i] === null || !data[i].length) {
 				delete data[i]
 			}
 		}

@@ -25,6 +25,12 @@ const handleUpdate = (body, parsed) => {
 	if (!body && !body.replace && !body.add && !body.delete) {
 		return
 	}
+	if (body.delete && Array.isArray(body.delete)) {
+		for (let key of body.delete) {
+			delete parsed[key]
+		}
+		return parsed
+	}
 	const updates = utils.removeEmpty(parse.fromJSON({
 		'type': parsed.type,
 		'properties': body.replace || body.add || body.delete
@@ -34,11 +40,6 @@ const handleUpdate = (body, parsed) => {
 	}
 	if (body.replace) {
 		return { ...parsed, ...updates }
-	} else if (body.delete && Array.isArray(body.delete)) {
-		for (let key of body.delete) {
-			delete parsed[key]
-		}
-		return parsed
 	} else {
 		for (let [key, value] of Object.entries(updates)) {
 			if (key == 'type' || key == 'photo') { // skip these properties

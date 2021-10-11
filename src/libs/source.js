@@ -1,30 +1,7 @@
 
 import GitHub from './github'
-import content from './content'
+import parse from './parse'
 import { utils } from './utils'
-
-const parsedToSource = (parsed, properties) => {
-	const source = {
-		'type': parsed.type,
-		'properties': {
-			'name': parsed.title,
-			'summary': parsed.summary,
-			'content': [parsed.content],
-			'published': [parsed.date],
-			'updated': [parsed.updated],
-			'category': parsed.tags
-		}
-	}
-	if (properties) {
-		delete source.type
-		for (let key in source.properties) {
-			if (!properties.includes(key)) {
-				delete source.properties[key]
-			}
-		}
-	}
-	return source
-}
 
 export default {
 	get: async (url, properties) => {
@@ -36,12 +13,12 @@ export default {
 		if (!exists) {
 			return { 'error': 'file does not exist' }
 		}
-		const parsed = content.parse(exists.content)
+		const parsed = parse.fromFrontMatter(exists.content)
 		if (!parsed) {
 			return { 'error': 'could not parse file' }
 		}
 		return {
-			'source': parsedToSource(parsed, properties)
+			'source': parse.toSource(parsed, properties)
 		}
 	}
 }

@@ -1,7 +1,8 @@
 {
   "env": {
     "node": true,
-    "es2021": true
+    "es2021": true,
+    "jest": true
   },
   "parserOptions": {
     "sourceType": "module"
@@ -12,6 +13,7 @@
     "indent": [ 2, "tab" ],
     "no-trailing-spaces": "error",
     "semi": [2, "never"],
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single"],
+    "guard-for-in": "error"
   }
 }

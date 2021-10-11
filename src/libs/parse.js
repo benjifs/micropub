@@ -7,7 +7,14 @@ const stringFromProp = prop => {
 	}
 }
 
+const itemsToArray = items => {
+	return !items ? [] : (Array.isArray(items) ? items : [items])
+}
+
 export default {
+	stringFromProp: stringFromProp,
+	itemsToArray: itemsToArray,
+
 	fromJSON: json => {
 		if (!json || !json.type || !json.properties) {
 			return null
@@ -17,7 +24,8 @@ export default {
 			'type': stringFromProp(type),
 			'content': stringFromProp(properties.content),
 			'name': stringFromProp(properties.name),
-			'category': properties.category,
+			'category': itemsToArray(properties.category),
+			'photo': itemsToArray(properties.photo),
 			'slug': stringFromProp(properties['mp-slug']),
 			'status': stringFromProp(properties['post-status']),
 			'visibility': stringFromProp(properties['visibility'])
@@ -32,7 +40,12 @@ export default {
 			'type': form.h ? `h-${form.h}` : null,
 			'content': form.content,
 			'name': form.name,
-			'category': !form.category ? null : (Array.isArray(form.category) ? form.category : [form.category]),
+			'category': itemsToArray(form.category),
+			'photo': [
+				// photos could come in as either `photo` or `file`
+				// handle `photo[]` and `file[]` for multiple files for now
+				...itemsToArray(form.photo), ...itemsToArray(form.file),
+				...itemsToArray(form['photo[]']), ...itemsToArray(form['file[]'])],
 			'slug': form['mp-slug'],
 			'status': form['post-status'],
 			'visibility': form.visibility

@@ -16,7 +16,7 @@ const mediaFn = async event => {
 	}
 
 	const { headers, body } = event
-	const error = await auth.isAuthorized(headers, body, 'media')
+	const error = await auth.isAuthorized(headers, body, 'media create')
 	if (error) {
 		return Response.error(error)
 	}

@@ -10,9 +10,10 @@ const Auth = {
 				headers: {
 					accept: 'application/json',
 					Authorization: `Bearer ${token}`
-				}
+				},
+				responseType: 'json'
 			})
-			return body && JSON.parse(body)
+			return body
 		} catch (err) {
 			console.error(err)
 		}
@@ -20,6 +21,9 @@ const Auth = {
 	isAuthorized: async (headers, body, required_scope) => {
 		console.log('HEADERS:', headers)
 		console.log('BODY:', body)
+		if (headers.authorization && headers.authorization.split(' ')[1] && body.access_token) {
+			return Error.INVALID
+		}
 		const token = (headers.authorization && headers.authorization.split(' ')[1]) || body.access_token
 		if (!token) {
 			return Error.UNAUTHORIZED
@@ -29,7 +33,8 @@ const Auth = {
 			return Error.FORBIDDEN
 		}
 		const valid_scopes = auth.scope.split(' ')
-		if (!valid_scopes.includes(required_scope)) {
+		// Checks if at least one of the values in `required_scope` is in `valid_scopes`
+		if (!required_scope.split(' ').some(scope => valid_scopes.includes(scope))) {
 			return Error.SCOPE
 		}
 	}

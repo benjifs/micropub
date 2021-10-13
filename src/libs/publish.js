@@ -67,8 +67,11 @@ export default {
 	addContent: async (data, isJSON) => {
 		const parsed = isJSON ? parse.fromJSON(data) : parse.fromForm(data)
 		console.log('└─>', parsed)
-		if (!parsed || !parsed.content) {
-			return { 'error': 'content is empty' }
+		if (parsed && parsed['like-of']) {
+			parsed.name = await parse.getPageTitle(parsed['like-of']) || parsed.name
+		}
+		if (!parsed || (!parsed.content && !parsed.name)) {
+			return { 'error': 'nothing to add' }
 		}
 		const uploaded = await uploadFiles(parsed.photo)
 		if (uploaded && uploaded.length) {

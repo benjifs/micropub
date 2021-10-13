@@ -15,6 +15,7 @@ const content = {
 			(data.deleted ? 'deleted: true\n' : '') +
 			(data.draft ? 'draft: true\n' : '') +
 			(data.updated ? `updated: ${data.updated}\n` : '') +
+			(data['like-of'] ? `like-of: ${data['like-of']}\n` : '') +
 			'---\n\n' +
 			`${data.content || ''}`
 	},

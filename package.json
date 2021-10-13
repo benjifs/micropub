@@ -33,6 +33,7 @@
     "@middy/http-json-body-parser": "^2.5.1",
     "@middy/http-multipart-body-parser": "^2.5.1",
     "@middy/http-urlencode-body-parser": "^2.5.1",
+    "article-title": "^4.0.0",
     "dotenv": "^10.0.0",
     "front-matter": "^4.0.2",
     "got": "^11.8.2",

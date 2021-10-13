@@ -4,12 +4,12 @@ import got from 'got'
 import { Error } from './response'
 
 const Auth = {
-	validateToken: async (token_endpoint, token) => {
+	validateToken: async (tokenEndpoint, token) => {
 		try {
-			const { body } = await got(token_endpoint, {
+			const { body } = await got(tokenEndpoint, {
 				headers: {
-					accept: 'application/json',
-					Authorization: `Bearer ${token}`
+					'accept': 'application/json',
+					'Authorization': `Bearer ${token}`
 				},
 				responseType: 'json'
 			})
@@ -18,13 +18,13 @@ const Auth = {
 			console.error(err)
 		}
 	},
-	isAuthorized: async (headers, body, required_scope) => {
+	isAuthorized: async (headers, body, requiredScopes) => {
 		console.log('HEADERS:', headers)
 		console.log('BODY:', body)
-		if (headers.authorization && headers.authorization.split(' ')[1] && body.access_token) {
+		if (headers.authorization && headers.authorization.split(' ')[1] && body['access_token']) {
 			return Error.INVALID
 		}
-		const token = (headers.authorization && headers.authorization.split(' ')[1]) || body.access_token
+		const token = (headers.authorization && headers.authorization.split(' ')[1]) || body['access_token']
 		if (!token) {
 			return Error.UNAUTHORIZED
 		}
@@ -32,9 +32,9 @@ const Auth = {
 		if (!auth || auth.me != process.env.ME) {
 			return Error.FORBIDDEN
 		}
-		const valid_scopes = auth.scope.split(' ')
-		// Checks if at least one of the values in `required_scope` is in `valid_scopes`
-		if (!required_scope.split(' ').some(scope => valid_scopes.includes(scope))) {
+		const validScopes = auth.scope.split(' ')
+		// Checks if at least one of the values in `requiredScopes` is in `validScopes`
+		if (!requiredScopes.split(' ').some(scope => validScopes.includes(scope))) {
 			return Error.SCOPE
 		}
 	}

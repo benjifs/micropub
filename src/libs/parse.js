@@ -1,7 +1,9 @@
 
+import articleTitle from 'article-title'
 import fm from 'front-matter'
+import got from 'got'
 
-const stringFromProp = prop => {
+const getPropertyValue = prop => {
 	if (prop) {
 		return Array.isArray(prop) ? prop[0] : prop
 	}
@@ -11,9 +13,22 @@ const itemsToArray = items => {
 	return !items ? [] : (Array.isArray(items) ? items : [items])
 }
 
+const getPageTitle = async urlString => {
+	try {
+		const url = new URL(urlString)
+		const res = await got(url)
+		if (res) {
+			return articleTitle(res.body)
+		}
+	} catch(err) {
+		console.error('Could not parse:', urlString)
+	}
+}
+
 export default {
-	stringFromProp: stringFromProp,
+	getPropertyValue: getPropertyValue,
 	itemsToArray: itemsToArray,
+	getPageTitle: getPageTitle,
 
 	fromJSON: json => {
 		if (!json || !json.type || !json.properties) {
@@ -22,14 +37,15 @@ export default {
 		const { type, properties } = json
 		const category = itemsToArray(properties.category)
 		return {
-			'type': stringFromProp(type),
-			'content': stringFromProp(properties.content),
-			'name': stringFromProp(properties.name),
+			'type': getPropertyValue(type),
+			'content': getPropertyValue(properties.content),
+			'name': getPropertyValue(properties.name),
 			'category': category.length ? category : null,
 			'photo': itemsToArray(properties.photo),
-			'slug': stringFromProp(properties['mp-slug']),
-			'status': stringFromProp(properties['post-status']),
-			'visibility': stringFromProp(properties['visibility'])
+			'slug': getPropertyValue(properties['mp-slug']),
+			'status': getPropertyValue(properties['post-status']),
+			'visibility': getPropertyValue(properties['visibility']),
+			'like-of': getPropertyValue(properties['like-of'])
 		}
 	},
 

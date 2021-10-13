@@ -3,33 +3,31 @@ import got from 'got'
 
 import { Base64 } from './utils'
 
-const DEFAULT_IMAGE_DIR = 'uploads'
-
 const GitLab = {
 	createFile: async (filename, content) => {
 		console.log('GITLAB.createFile', content)
 		return await GitLab.upload('POST', filename, {
-			content: content,
-			commit_message: `add: ${filename}`
+			'content': content,
+			'commit_message': `add: ${filename}`
 		})
 	},
 
 	updateFile: async (filename, content) => {
 		console.log('GITLAB.updateFile', content)
 		return await GitLab.upload('PUT', filename, {
-			content: content,
-			commit_message: `update: ${filename}`
+			'content': content,
+			'commit_message': `update: ${filename}`
 		})
 	},
 
 	uploadImage: async (file) => {
 		console.log('GITLAB.uploadImage', file.filename)
-		const dir = (process.env.IMAGE_DIR || DEFAULT_IMAGE_DIR).replace(/\/$/, '')
+		const dir = (process.env.IMAGE_DIR || 'uploads').replace(/\/$/, '')
 		const filename = `${dir}/${Math.round(new Date() / 1000)}_${file.filename}`
 		return await GitLab.upload('POST', filename, {
-			encoding: 'base64',
-			content: Base64.encode(file.content),
-			commit_message: `upload: ${filename}`
+			'encoding': 'base64',
+			'content': Base64.encode(file.content),
+			'commit_message': `upload: ${filename}`
 		})
 	},
 
@@ -57,7 +55,7 @@ const GitLab = {
 		const body = await GitLab.request('DELETE',
 			encodeURIComponent(filename),
 			{
-				commit_message: `delete: ${filename}`
+				'commit_message': `delete: ${filename}`
 			}
 		)
 		if (body) {
@@ -87,10 +85,10 @@ const GitLab = {
 		}
 		if (json) {
 			options['Content-Type'] = 'application/json'
-			json.branch = process.env.GIT_BRANCH // Branch is required in GitLab
+			json['branch'] = process.env.GIT_BRANCH // Branch is required in GitLab
 			if (process.env.AUTHOR_EMAIL && process.env.AUTHOR_NAME) { // Optional
-				json.author_email = process.env.AUTHOR_EMAIL
-				json.author_name = process.env.AUTHOR_NAME
+				json['author_email'] = process.env.AUTHOR_EMAIL
+				json['author_name'] = process.env.AUTHOR_NAME
 			}
 			options['json'] = json
 		}

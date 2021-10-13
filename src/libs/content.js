@@ -10,13 +10,13 @@ const content = {
 		}
 		return '---\n' +
 			`date: ${data.date}\n` +
-			(data.name ? `title: ${data.name}\n` : '') +
+			(data.name ? `title: "${data.name}"\n` : '') +
 			(data.category && data.category.length ? `tags:\n - ${data.category.join('\n - ')}\n` : '') +
 			(data.deleted ? 'deleted: true\n' : '') +
 			(data.draft ? 'draft: true\n' : '') +
 			(data.updated ? `updated: ${data.updated}\n` : '') +
 			'---\n\n' +
-			data.content
+			`${data.content || ''}`
 	},
 
 	format: data => {

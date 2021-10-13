@@ -1,8 +1,6 @@
 
 import { utils } from './utils'
 
-const DEFAULT_CONTENT_DIR = 'src'
-
 const content = {
 	output: data => {
 		if (!data) {
@@ -38,7 +36,7 @@ const content = {
 			const ts = Math.round(date / 1000)
 			slug = `${type}/${ts}` + (data.name ? `-${utils.slugify(data.name)}` : '')
 		}
-		const dir = (process.env.CONTENT_DIR || DEFAULT_CONTENT_DIR).replace(/\/$/, '')
+		const dir = (process.env.CONTENT_DIR || 'src').replace(/\/$/, '')
 		const filename = `${dir}/${slug}.md`
 
 		return {

@@ -3,33 +3,31 @@ import got from 'got'
 
 import { Base64 } from './utils'
 
-const DEFAULT_IMAGE_DIR = 'uploads'
-
 const GitHub = {
 	createFile: async (filename, content) => {
 		console.log('GITHUB.createFile', content)
 		return await GitHub.upload('PUT', filename, {
-			content: Base64.encode(content),
-			message: `add: ${filename}`
+			'content': Base64.encode(content),
+			'message': `add: ${filename}`
 		})
 	},
 
 	updateFile: async (filename, content, original) => {
 		console.log('GITHUB.updateFile', content)
 		return await GitHub.upload('PUT', filename, {
-			content: Base64.encode(content),
-			sha: original.sha,
-			message: `update: ${filename}`
+			'content': Base64.encode(content),
+			'sha': original.sha,
+			'message': `update: ${filename}`
 		})
 	},
 
 	uploadImage: async (file) => {
 		console.log('GITHUB.uploadImage', file.filename)
-		const dir = (process.env.IMAGE_DIR || DEFAULT_IMAGE_DIR).replace(/\/$/, '')
+		const dir = (process.env.IMAGE_DIR || 'uploads').replace(/\/$/, '')
 		const filename = `${dir}/${Math.round(new Date() / 1000)}_${file.filename}`
 		return await GitHub.upload('PUT', filename, {
-			content: Base64.encode(file.content),
-			message: `upload: ${filename}`
+			'content': Base64.encode(file.content),
+			'message': `upload: ${filename}`
 		})
 	},
 
@@ -93,12 +91,12 @@ const GitHub = {
 		if (json) {
 			options['Content-Type'] = 'application/json'
 			if (process.env.GIT_BRANCH) {
-				json.branch = process.env.GIT_BRANCH
+				json['branch'] = process.env.GIT_BRANCH
 			}
 			if (process.env.AUTHOR_EMAIL && process.env.AUTHOR_NAME) {
-				json.committer = {
-					email: process.env.AUTHOR_EMAIL,
-					name: process.env.AUTHOR_NAME
+				json['committer'] = {
+					'email': process.env.AUTHOR_EMAIL,
+					'name': process.env.AUTHOR_NAME
 				}
 			}
 			options['json'] = json

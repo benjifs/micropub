@@ -23,7 +23,7 @@ const GitHub = {
 
 	uploadImage: async (file) => {
 		console.log('GITHUB.uploadImage', file.filename)
-		const dir = (process.env.IMAGE_DIR || 'uploads').replace(/\/$/, '')
+		const dir = (process.env.MEDIA_DIR || 'uploads').replace(/\/$/, '')
 		const filename = `${dir}/${Math.round(new Date() / 1000)}_${file.filename}`
 		return await GitHub.upload('PUT', filename, {
 			'content': Base64.encode(file.content),
@@ -32,8 +32,7 @@ const GitHub = {
 	},
 
 	upload: async (method, filename, jsonBody) => {
-		filename = encodeURIComponent(filename)
-		const body = await GitHub.request(method, filename, jsonBody)
+		const body = await GitHub.request(method, encodeURIComponent(filename), jsonBody)
 		if (body && body.content && body.content.path) {
 			return filename
 		}
@@ -49,6 +48,19 @@ const GitHub = {
 				'content': Base64.decode(body.content),
 				'sha': body.sha
 			}
+		}
+	},
+
+	// https://docs.github.com/en/rest/reference/repos#get-repository-content
+	// GitHub Contents returns first 1000 files sorted by filename in dir
+	// Might need to switch to tree API later
+	// https://docs.github.com/en/rest/reference/git#get-a-tree
+	getDirectory: async (dir) => {
+		const body = await GitHub.request('GET',
+			encodeURIComponent(dir) + (process.env.GIT_BRANCH ? `?ref=${process.env.GIT_BRANCH}` : '')
+		)
+		if (body && Array.isArray(body)) {
+			return { 'files': body }
 		}
 	},
 

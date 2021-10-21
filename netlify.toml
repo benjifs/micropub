@@ -17,4 +17,4 @@
 	ME = "Your website url (https://domain.tld/)"
 	TOKEN_ENDPOINT = "Endpoint to validate Token"
 	CONTENT_DIR="Directory where posts are uploaded to"
-	IMAGE_DIR="Directory where media is uploaded to"
+	MEDIA_DIR="Directory where media is uploaded to"

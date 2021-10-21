@@ -32,8 +32,7 @@ const GitHub = {
 	},
 
 	upload: async (method, filename, jsonBody) => {
-		filename = encodeURIComponent(filename)
-		const body = await GitHub.request(method, filename, jsonBody)
+		const body = await GitHub.request(method, encodeURIComponent(filename), jsonBody)
 		if (body && body.content && body.content.path) {
 			return filename
 		}

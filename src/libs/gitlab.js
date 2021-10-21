@@ -32,8 +32,7 @@ const GitLab = {
 	},
 
 	upload: async (method, filename, jsonBody) => {
-		filename = encodeURIComponent(filename)
-		const body = await GitLab.request(method, filename, jsonBody)
+		const body = await GitLab.request(method, encodeURIComponent(filename), jsonBody)
 		if (body && body.file_path) {
 			return filename
 		}

@@ -22,7 +22,7 @@ const GitLab = {
 
 	uploadImage: async (file) => {
 		console.log('GITLAB.uploadImage', file.filename)
-		const dir = (process.env.IMAGE_DIR || 'uploads').replace(/\/$/, '')
+		const dir = (process.env.MEDIA_DIR || 'uploads').replace(/\/$/, '')
 		const filename = `${dir}/${Math.round(new Date() / 1000)}_${file.filename}`
 		return await GitLab.upload('POST', filename, {
 			'encoding': 'base64',
@@ -32,7 +32,9 @@ const GitLab = {
 	},
 
 	upload: async (method, filename, jsonBody) => {
-		const body = await GitLab.request(method, encodeURIComponent(filename), jsonBody)
+		const body = await GitLab.request(method,
+			`repository/files/${encodeURIComponent(filename)}`,
+			jsonBody)
 		if (body && body.file_path) {
 			return filename
 		}
@@ -40,7 +42,7 @@ const GitLab = {
 
 	getFile: async (filename) => {
 		const body = await GitLab.request('GET',
-			`${encodeURIComponent(filename)}/raw?ref=${process.env.GIT_BRANCH}`
+			`repository/files/?ref=${process.env.GIT_BRANCH}&path=${encodeURIComponent(filename)}`
 		)
 		if (body) {
 			return {
@@ -50,9 +52,21 @@ const GitLab = {
 		}
 	},
 
+	// https://docs.gitlab.com/ee/api/repositories.html#list-repository-tree
+	// `per_page` default is 20 (MAX 100)
+	getDirectory: async (dir) => {
+		const body = await GitLab.request('GET',
+			`repository/tree/?ref=${process.env.GIT_BRANCH}&path=${encodeURIComponent(dir)}`,
+			true
+		)
+		if (body && Array.isArray(body)) {
+			return { 'files': body }
+		}
+	},
+
 	deleteFile: async (filename) => {
 		const body = await GitLab.request('DELETE',
-			encodeURIComponent(filename),
+			`repository/files/${encodeURIComponent(filename)}`,
 			{
 				'commit_message': `delete: ${filename}`
 			}
@@ -72,17 +86,17 @@ const GitLab = {
 			}
 		}
 		const instance = got.extend({
-			prefixUrl: `https://gitlab.com/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/repository/files/`,
+			prefixUrl: `https://gitlab.com/api/v4/projects/${process.env.GITLAB_PROJECT_ID}/`,
 			headers: {
 				'PRIVATE-TOKEN': process.env.GIT_TOKEN
 			},
-			responseType: method != 'GET' ? 'json' : undefined
+			responseType: method != 'GET' || json ? 'json' : undefined
 		})
 
 		const options = {
 			method: method.toUpperCase(),
 		}
-		if (json) {
+		if (json && json !== true) {
 			options['Content-Type'] = 'application/json'
 			json['branch'] = process.env.GIT_BRANCH // Branch is required in GitLab
 			if (process.env.AUTHOR_EMAIL && process.env.AUTHOR_NAME) { // Optional

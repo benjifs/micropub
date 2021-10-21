@@ -47,7 +47,7 @@ Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also b
 | --- | --- | --- |
 | MEDIA_ENDPOINT | If using an external `MEDIA_ENDPOINT`. Returned in [configuration](https://micropub.spec.indieweb.org/#configuration) | `NETLIFY_URL/.netlify/functions/media` |
 | CONTENT_DIR | Directory where posts are uploaded to | `src` |
-| IMAGE_DIR | Directory where media is uploaded to | `uploads` |
+| MEDIA_DIR | Directory where media is uploaded to | `uploads` |
 
 ### Additional Environment Variables
 * `DEBUG`: Will prevent `POST`, `PUT`, and `DELETE` requests to go to GitHub or GitLab. Only used for debugging.

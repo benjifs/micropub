@@ -17,7 +17,7 @@ const getHandler = async query => {
 	let res
 	if (query.q === 'config') {
 		return Response.send(200, {
-			'media-endpoint': process.env.MEDIA_ENDPOINT || `${process.env.URL}/.netlify/functions/media`,
+			'media-endpoint': process.env.MEDIA_ENDPOINT || `${process.env.URL || ''}/.netlify/functions/media`,
 			'syndicate-to': []
 		})
 	} else if (query.q === 'source' && query.url) {

@@ -9,23 +9,22 @@ const Error = {
 }
 
 const Response = {
-	send: (code, body) => {
+	send: (code, body, headers) => {
 		return {
 			'statusCode': code,
 			'headers': {
-				'Content-Type': 'application/json'
+				'Content-Type': 'application/json',
+				...headers
 			},
 			'body': body ? JSON.stringify(body) : 'success'
 		}
 	},
-	sendLocation: location => {
-		return {
-			'statusCode': 201,
-			'headers': {
-				'Location': location
-			},
-			'body': 'success'
-		}
+	sendLocation: (location, sendBody) => {
+		return Response.send(201, sendBody ? {
+			'url': location
+		} : null, {
+			'Location': location
+		})
 	},
 	error: (type, description) => {
 		return Response.send(type.statusCode, {

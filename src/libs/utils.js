@@ -5,6 +5,11 @@ const Base64 = {
 }
 
 const utils = {
+	// Gets only properties from array `allow` that are in `props`
+	pick: (allow, props) => {
+		return allow.reduce((prev, key) => (key in props && (prev[key] = props[key]), prev), {})
+	},
+
 	slugify: text => {
 		return text
 			.toLowerCase()
@@ -15,7 +20,9 @@ const utils = {
 
 	removeEmpty: data => {
 		for (let i in data) {
-			if (data[i] === undefined || data[i] === null || !data[i].length) {
+			if (data[i] === undefined || data[i] === null ||
+				(Array.isArray(data[i]) && !data[i].length) ||
+				(typeof data[i] === 'object' && !Object.keys(data[i]).length)) {
 				delete data[i]
 			}
 		}
@@ -32,6 +39,7 @@ const utils = {
 				return `${dir}/${url.pathname.replace(/^\/|\/$/g, '')}.md`
 			}
 		} catch (err) {
+			console.error(err)
 			console.error('Invalid URL:', urlString)
 		}
 	}

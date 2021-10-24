@@ -7,7 +7,14 @@ const Base64 = {
 const utils = {
 	// Gets only properties from array `allow` that are in `props`
 	pick: (allow, props) => {
-		return allow.reduce((prev, key) => (key in props && (prev[key] = props[key]), prev), {})
+		// return allow.reduce((prev, key) => (key in props && (prev[key] = props[key]), prev), {})
+		let allowed = {}
+		for (let prop in props) {
+			if (allow.includes(prop)) {
+				allowed[prop] = props[prop]
+			}
+		}
+		return allowed
 	},
 
 	slugify: text => {

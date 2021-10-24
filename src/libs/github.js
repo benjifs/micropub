@@ -21,10 +21,8 @@ const GitHub = {
 		})
 	},
 
-	uploadImage: async (file) => {
-		console.log('GITHUB.uploadImage', file.filename)
-		const dir = (process.env.MEDIA_DIR || 'uploads').replace(/\/$/, '')
-		const filename = `${dir}/${Math.round(new Date() / 1000)}_${file.filename}`
+	uploadImage: async (filename, file) => {
+		console.log('GITHUB.uploadImage', filename, file.filename)
 		return await GitHub.upload('PUT', filename, {
 			'content': Base64.encode(file.content),
 			'message': `upload: ${filename}`

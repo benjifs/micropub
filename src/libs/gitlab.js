@@ -20,10 +20,8 @@ const GitLab = {
 		})
 	},
 
-	uploadImage: async (file) => {
-		console.log('GITLAB.uploadImage', file.filename)
-		const dir = (process.env.MEDIA_DIR || 'uploads').replace(/\/$/, '')
-		const filename = `${dir}/${Math.round(new Date() / 1000)}_${file.filename}`
+	uploadImage: async (filename, file) => {
+		console.log('GITLAB.uploadImage', filename, file.filename)
 		return await GitLab.upload('POST', filename, {
 			'encoding': 'base64',
 			'content': Base64.encode(file.content),

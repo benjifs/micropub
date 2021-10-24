@@ -7,6 +7,7 @@ import httpMultipartBodyParser from '@middy/http-multipart-body-parser'
 dotenv.config()
 
 import auth from './libs/auth'
+import content from './libs/content'
 import GitHub from './libs/github'
 import { Error, Response } from './libs/response'
 
@@ -60,10 +61,12 @@ const mediaFn = async event => {
 		return Response.error(error)
 	}
 
-	if (body.file || body.photo) {
-		const filename = await GitHub.uploadImage(body.file || body.photo)
-		if (filename) {
-			return Response.sendLocation(`${process.env.ME}${filename}`, true)
+	const file = body.file || body.photo
+	if (file && file.filename) {
+		const filename = content.mediaFilename(file)
+		const uploaded = await GitHub.uploadImage(filename, file)
+		if (uploaded) {
+			return Response.sendLocation(`${process.env.ME}${uploaded}`, true)
 		}
 	}
 	return Response.error(Error.INVALID)

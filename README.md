@@ -63,7 +63,6 @@ Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also b
 * `ME` should have a trailing slash
 
 ## TODO
-* Add tests
 * Separate the GitHub and GitLab functions (maybe as their own npm packages)
 * Configure to run with either GitHub or GitLab based on the set environment variables
 

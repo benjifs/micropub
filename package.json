@@ -8,7 +8,8 @@
     "serve": "netlify-lambda serve src",
     "esbuild": "esbuild src/*.js --bundle --outdir=lambda --platform=node",
     "build": "netlify-lambda build src",
-    "lint": "eslint src/**/*.js"
+    "lint": "eslint src/**/*.js",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,11 @@
     "netlify-lambda": "^2.0.14"
   },
   "devDependencies": {
-    "eslint": "^7.32.0"
+    "@babel/core": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "babel-jest": "^27.2.4",
+    "eslint": "^7.32.0",
+    "jest": "^27.2.4",
+    "nock": "^13.1.3"
   }
 }

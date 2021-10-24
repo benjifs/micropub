@@ -17,8 +17,12 @@ export default {
 		if (!parsed) {
 			return { 'error': 'could not parse file' }
 		}
+		const source = parse.toSource(parsed)
+		if (source && source.properties && properties) {
+			source.properties = utils.pick(properties, source.properties)
+		}
 		return {
-			'source': parse.toSource(parsed, properties)
+			'source': source
 		}
 	}
 }

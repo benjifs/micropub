@@ -8,7 +8,8 @@ const uploadFiles = async files => {
 	const photos = []
 	for (let file of files) {
 		if (file.filename) {
-			const uploaded = await GitHub.uploadImage(file)
+			const filename = content.mediaFilename(file)
+			const uploaded = await GitHub.uploadImage(filename, file)
 			if (uploaded) {
 				photos.push({ 'value': uploaded })
 			}

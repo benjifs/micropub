@@ -2,7 +2,7 @@
 import parse from '../src/libs/parse'
 
 describe('parse', () => {
-	const likedURL = 'https://indieweb.org'
+	const likedURL = 'https://domain.tld'
 	const json = {
 		'type': [ 'h-entry' ],
 		'properties': {
@@ -39,9 +39,9 @@ describe('parse', () => {
 	' - two\n' +
 	' - three\n' +
 	'updated: 2021-10-09T12:23:34.120Z\n' +
-	'like-of: https://indieweb.org\n' +
-	'bookmark-of: https://indieweb.org\n' +
-	'in-reply-to: https://indieweb.org\n' +
+	`like-of: ${likedURL}\n` +
+	`bookmark-of: ${likedURL}\n` +
+	`in-reply-to: ${likedURL}\n` +
 	'rsvp: maybe\n' +
 	'---\n' +
 	'\n' +

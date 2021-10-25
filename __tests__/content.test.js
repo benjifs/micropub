@@ -2,6 +2,8 @@
 import content from '../src/libs/content'
 
 describe('content', () => {
+	const likedURL = 'https://domain.tld'
+
 	const data = {
 		'date': '2021-09-09T12:23:34.120Z',
 		'name': 'Title',
@@ -47,25 +49,25 @@ describe('content', () => {
 		})
 
 		test('like post', () => {
-			data['like-of'] = 'https://indieweb.org'
+			data['like-of'] = likedURL
 			const fm = content.output(data)
 			expect(fm).toContain('\nlike-of:')
 		})
 
 		test('bookmark post', () => {
-			data['bookmark-of'] = 'https://indieweb.org'
+			data['bookmark-of'] = likedURL
 			const fm = content.output(data)
 			expect(fm).toContain('\nbookmark-of:')
 		})
 
 		test('reply post', () => {
-			data['in-reply-to'] = 'https://indieweb.org'
+			data['in-reply-to'] = likedURL
 			const fm = content.output(data)
 			expect(fm).toContain('\nin-reply-to:')
 		})
 
 		test('rsvp post', () => {
-			data['in-reply-to'] = 'https://indieweb.org'
+			data['in-reply-to'] = likedURL
 			data['rsvp'] = 'maybe'
 			const fm = content.output(data)
 			expect(fm).toContain('\nin-reply-to:')

@@ -14,6 +14,9 @@ const content = {
 			(data.draft ? 'draft: true\n' : '') +
 			(data.updated ? `updated: ${data.updated}\n` : '') +
 			(data['like-of'] ? `like-of: ${data['like-of']}\n` : '') +
+			(data['bookmark-of'] ? `bookmark-of: ${data['bookmark-of']}\n` : '') +
+			(data['in-reply-to'] ? `in-reply-to: ${data['in-reply-to']}\n` : '') +
+			(data['rsvp'] ? `rsvp: ${data['rsvp']}\n` : '') +
 			'---\n\n' +
 			`${data.content || ''}`
 	},

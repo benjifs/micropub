@@ -47,9 +47,29 @@ describe('content', () => {
 		})
 
 		test('like post', () => {
-			data['like-of'] = true
+			data['like-of'] = 'https://indieweb.org'
 			const fm = content.output(data)
 			expect(fm).toContain('\nlike-of:')
+		})
+
+		test('bookmark post', () => {
+			data['bookmark-of'] = 'https://indieweb.org'
+			const fm = content.output(data)
+			expect(fm).toContain('\nbookmark-of:')
+		})
+
+		test('reply post', () => {
+			data['in-reply-to'] = 'https://indieweb.org'
+			const fm = content.output(data)
+			expect(fm).toContain('\nin-reply-to:')
+		})
+
+		test('rsvp post', () => {
+			data['in-reply-to'] = 'https://indieweb.org'
+			data['rsvp'] = 'maybe'
+			const fm = content.output(data)
+			expect(fm).toContain('\nin-reply-to:')
+			expect(fm).toContain('\nrsvp:')
 		})
 
 		test('null data', () => {

@@ -71,7 +71,8 @@ export default {
 		if (parsed && parsed['like-of']) {
 			parsed.name = await parse.getPageTitle(parsed['like-of']) || parsed.name
 		}
-		if (!parsed || (!parsed.content && !parsed.name)) {
+		if (!parsed ||
+			!(parsed.content || parsed.name || (parsed['in-reply-to'] && parsed.rsvp))) {
 			return { 'error': 'nothing to add' }
 		}
 		const uploaded = await uploadFiles(parsed.photo)

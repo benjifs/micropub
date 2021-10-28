@@ -2,6 +2,7 @@
 import parse from '../src/libs/parse'
 
 describe('parse', () => {
+	const likedURL = 'https://domain.tld'
 	const json = {
 		'type': [ 'h-entry' ],
 		'properties': {
@@ -10,7 +11,11 @@ describe('parse', () => {
 			'category': [ 'one', 'two', 'three' ],
 			'post-status': [ 'published' ],
 			'visibility': [ 'public' ],
-			'mp-slug': [ 'this-is-a-slug' ]
+			'mp-slug': [ 'this-is-a-slug' ],
+			'like-of': [ likedURL ],
+			'bookmark-of': [ likedURL ],
+			'in-reply-to': [ likedURL ],
+			'rsvp': [ 'maybe' ]
 		}
 	}
 
@@ -19,7 +24,11 @@ describe('parse', () => {
 		'content': 'Content goes here\r\nAnd thats all',
 		'name': 'Title',
 		'category': [ 'one', 'two', 'three' ],
-		'mp-slug': 'this-is-a-slug'
+		'mp-slug': 'this-is-a-slug',
+		'like-of': likedURL,
+		'bookmark-of': likedURL,
+		'in-reply-to': likedURL,
+		'rsvp': 'maybe'
 	}
 
 	const fm = '---\n' +
@@ -30,6 +39,10 @@ describe('parse', () => {
 	' - two\n' +
 	' - three\n' +
 	'updated: 2021-10-09T12:23:34.120Z\n' +
+	`like-of: ${likedURL}\n` +
+	`bookmark-of: ${likedURL}\n` +
+	`in-reply-to: ${likedURL}\n` +
+	'rsvp: maybe\n' +
 	'---\n' +
 	'\n' +
 	'Content goes here\r\nAnd thats all'
@@ -77,6 +90,10 @@ describe('parse', () => {
 			expect(data.type).toBe('h-entry')
 			expect(data.name).toBe('Title')
 			expect(data.category).toHaveLength(3)
+			expect(data['like-of']).toBe(likedURL)
+			expect(data['bookmark-of']).toBe(likedURL)
+			expect(data['in-reply-to']).toBe(likedURL)
+			expect(data['rsvp']).toBe('maybe')
 		})
 
 		test('data without categories', () => {
@@ -103,6 +120,10 @@ describe('parse', () => {
 			expect(data.name).toBe('Title')
 			expect(data.category).toHaveLength(3)
 			expect(data.name).toBe('Title')
+			expect(data['like-of']).toBe(likedURL)
+			expect(data['bookmark-of']).toBe(likedURL)
+			expect(data['in-reply-to']).toBe(likedURL)
+			expect(data['rsvp']).toBe('maybe')
 		})
 
 		const form2 = { ...form }
@@ -137,6 +158,10 @@ describe('parse', () => {
 			expect(parsed.category).toHaveLength(3)
 			expect(parsed.name).toBe('Title')
 			expect(parsed.content).toBe(form.content)
+			expect(parsed['like-of']).toBe(likedURL)
+			expect(parsed['bookmark-of']).toBe(likedURL)
+			expect(parsed['in-reply-to']).toBe(likedURL)
+			expect(parsed['rsvp']).toBe('maybe')
 		})
 	})
 

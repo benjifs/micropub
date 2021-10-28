@@ -45,7 +45,10 @@ export default {
 			'slug': getPropertyValue(properties['mp-slug']),
 			'status': getPropertyValue(properties['post-status']),
 			'visibility': getPropertyValue(properties['visibility']),
-			'like-of': getPropertyValue(properties['like-of'])
+			'like-of': getPropertyValue(properties['like-of']),
+			'bookmark-of': getPropertyValue(properties['bookmark-of']),
+			'in-reply-to': getPropertyValue(properties['in-reply-to']),
+			'rsvp': getPropertyValue(properties['rsvp'])
 		}
 	},
 
@@ -66,7 +69,11 @@ export default {
 				...itemsToArray(form['photo[]']), ...itemsToArray(form['file[]'])],
 			'slug': form['mp-slug'],
 			'status': form['post-status'],
-			'visibility': form.visibility
+			'visibility': form.visibility,
+			'like-of': form['like-of'],
+			'bookmark-of': form['bookmark-of'],
+			'in-reply-to': form['in-reply-to'],
+			'rsvp': form['rsvp']
 		}
 	},
 
@@ -80,7 +87,11 @@ export default {
 			'date': attributes.date.toISOString(),
 			'updated': attributes.updated ? attributes.updated.toISOString : null,
 			'status': attributes.draft ? 'draft' : null,
-			'deleted': attributes.deleted
+			'deleted': attributes.deleted,
+			'like-of': attributes['like-of'],
+			'bookmark-of': attributes['bookmark-of'],
+			'in-reply-to': attributes['in-reply-to'],
+			'rsvp': attributes['rsvp']
 		}
 	},
 

@@ -58,7 +58,7 @@ describe('publish', () => {
 			const res = await publish.addContent(entry)
 			expect(getPageTitle.mock.calls.length).toBe(1)
 			expect(res).toHaveProperty('filename')
-			expect(res.filename).toContain('posts/')
+			expect(res.filename).toContain('likes/')
 		})
 
 		test('add bookmark', async () => {
@@ -66,7 +66,7 @@ describe('publish', () => {
 			entry['bookmark-of'] = 'https://domain.tld'
 			const res = await publish.addContent(entry)
 			expect(res).toHaveProperty('filename')
-			expect(res.filename).toContain('posts/')
+			expect(res.filename).toContain('bookmarks/')
 		})
 
 		test('add reply', async () => {
@@ -82,7 +82,7 @@ describe('publish', () => {
 			entry['rsvp'] = 'yes'
 			const res = await publish.addContent(entry)
 			expect(res).toHaveProperty('filename')
-			expect(res.filename).toContain('notes/')
+			expect(res.filename).toContain('rsvp/')
 		})
 	})
 

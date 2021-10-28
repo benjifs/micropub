@@ -31,7 +31,7 @@ const content = {
 		} else {
 			data.updated = date.toISOString()
 		}
-		const type = data.name ? 'posts' : 'notes'
+		const type = content.getType(data) || ''
 		let slug
 		if (data.slug) {
 			slug = `${type}/${utils.slugify(data.slug)}`
@@ -48,6 +48,25 @@ const content = {
 			'formatted': content.output(data),
 			'data': data
 		}
+	},
+
+	getType: data => {
+		if (!data || typeof data !== 'object' || !Object.keys(data).length) {
+			return null
+		}
+		if (data['like-of']) {
+			return 'likes'
+		}
+		if (data['bookmark-of']) {
+			return 'bookmarks'
+		}
+		if (data['rsvp'] && data['in-reply-to']) {
+			return 'rsvp'
+		}
+		if (data['name']) {
+			return 'posts'
+		}
+		return 'notes'
 	},
 
 	mediaFilename: file => {

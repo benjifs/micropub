@@ -4,13 +4,7 @@ import content from '../src/libs/content'
 describe('content', () => {
 	const likedURL = 'https://domain.tld'
 
-	const data = {
-		'date': '2021-09-09T12:23:34.120Z',
-		'name': 'Title',
-		'category': [ 'one', 'two', 'three' ],
-		'updated': '2021-10-09T12:23:34.120Z',
-		'content': 'This is the content'
-	}
+	let data
 
 	const output = '---\n' +
 	'date: 2021-09-09T12:23:34.120Z\n' +
@@ -23,6 +17,16 @@ describe('content', () => {
 	'---\n' +
 	'\n' +
 	'This is the content'
+
+	beforeEach(() => {
+		data = {
+			'date': '2021-09-09T12:23:34.120Z',
+			'name': 'Title',
+			'category': [ 'one', 'two', 'three' ],
+			'updated': '2021-10-09T12:23:34.120Z',
+			'content': 'This is the content'
+		}
+	})
 
 	describe('output', () => {
 		test('standard post', () => {
@@ -134,6 +138,32 @@ describe('content', () => {
 		test('invalid image', () => {
 			const filename = content.mediaFilename({})
 			expect(filename).toBeFalsy()
+		})
+	})
+
+	describe('getType', () => {
+		test('is like', () => {
+			expect(content.getType({ 'like-of': likedURL })).toBe('likes')
+		})
+
+		test('is bookmark', () => {
+			expect(content.getType({ 'bookmark-of': likedURL })).toBe('bookmarks')
+		})
+
+		test('is rsvp', () => {
+			const data = { 'rsvp': 'yes' }
+			expect(content.getType(data)).not.toBe('rsvp')
+			data['in-reply-to'] = likedURL
+			expect(content.getType(data)).toBe('rsvp')
+		})
+
+		test('is post', () => {
+			expect(content.getType({ 'name': 'hello' })).toBe('posts')
+		})
+
+		test('is note', () => {
+			expect(content.getType()).not.toBe('notes')
+			expect(content.getType({})).not.toBe('notes')
 		})
 	})
 })

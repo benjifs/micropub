@@ -17,6 +17,7 @@ Serverless [Micropub](https://indieweb.org/Micropub) server that accepts `CREATE
 <link rel="micropub" href="https://example.com/micropub">
 ```
 * Use a [Micropub Client](https://indieweb.org/Micropub/Clients) to authenticate and post to your site.
+* The published content should then be added to your repo as a markdown file under the directory: `/CONTENT_DIR/{ type }/` where `type` corresponds to the type of content published. Read more about [supported content types](#content-types).
 
 ### GitLab
 
@@ -51,6 +52,15 @@ Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also b
 
 ### Additional Environment Variables
 * `DEBUG`: Will prevent `POST`, `PUT`, and `DELETE` requests to go to GitHub or GitLab. Only used for debugging.
+
+## Content Types
+
+The current supported content types are:
+* [bookmark](https://indieweb.org/bookmark) - `/CONTENT_DIR/bookmarks/`
+* [like](https://indieweb.org/like) - `/CONTENT_DIR/likes/`
+* [note](https://indieweb.org/note) - `/CONTENT_DIR/notes/`
+* [article](https://indieweb.org/article) - `/CONTENT_DIR/posts/`
+* [rsvp](https://indieweb.org/rsvp) - `/CONTENT_DIR/rsvp/`
 
 ## Scopes
 * create - allows the client to create posts on behalf of the user

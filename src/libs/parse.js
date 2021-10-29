@@ -48,7 +48,8 @@ export default {
 			'like-of': getPropertyValue(properties['like-of']),
 			'bookmark-of': getPropertyValue(properties['bookmark-of']),
 			'in-reply-to': getPropertyValue(properties['in-reply-to']),
-			'rsvp': getPropertyValue(properties['rsvp'])
+			'rsvp': getPropertyValue(properties['rsvp']),
+			'deleted': getPropertyValue(properties['deleted'])
 		}
 	},
 
@@ -73,7 +74,8 @@ export default {
 			'like-of': form['like-of'],
 			'bookmark-of': form['bookmark-of'],
 			'in-reply-to': form['in-reply-to'],
-			'rsvp': form['rsvp']
+			'rsvp': form['rsvp'],
+			'deleted': form['deleted']
 		}
 	},
 
@@ -87,11 +89,11 @@ export default {
 			'date': attributes.date.toISOString(),
 			'updated': attributes.updated ? attributes.updated.toISOString : null,
 			'status': attributes.draft ? 'draft' : null,
-			'deleted': attributes.deleted,
 			'like-of': attributes['like-of'],
 			'bookmark-of': attributes['bookmark-of'],
 			'in-reply-to': attributes['in-reply-to'],
-			'rsvp': attributes['rsvp']
+			'rsvp': attributes['rsvp'],
+			'deleted': attributes['deleted']
 		}
 	},
 

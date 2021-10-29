@@ -10,13 +10,13 @@ const content = {
 			`date: ${data.date}\n` +
 			(data.name ? `title: "${data.name}"\n` : '') +
 			(data.category && data.category.length ? `tags:\n - ${data.category.join('\n - ')}\n` : '') +
-			(data.deleted ? 'deleted: true\n' : '') +
 			(data.draft ? 'draft: true\n' : '') +
 			(data.updated ? `updated: ${data.updated}\n` : '') +
 			(data['like-of'] ? `like-of: ${data['like-of']}\n` : '') +
 			(data['bookmark-of'] ? `bookmark-of: ${data['bookmark-of']}\n` : '') +
 			(data['in-reply-to'] ? `in-reply-to: ${data['in-reply-to']}\n` : '') +
 			(data['rsvp'] ? `rsvp: ${data['rsvp']}\n` : '') +
+			(data['deleted'] ? 'deleted: true\n' : '') +
 			'---\n\n' +
 			`${data.content || ''}`
 	},

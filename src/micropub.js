@@ -51,12 +51,14 @@ const micropubFn = async event => {
 	let res
 	if (action == 'create') {
 		res = await publish.addContent(body, headers['content-type'] == 'application/json')
-	} else if (action == 'delete') {
-		res = await publish.deleteContent(body.url)
 	} else if (action == 'update') {
 		res = await publish.updateContent(body.url, body)
+	} else if (action == 'delete') {
+		res = await publish.deleteContent(body.url, process.env.PERMANENT_DELETE)
+	} else if (action == 'undelete') {
+		res = await publish.undeleteContent(body.url)
 	} else {
-		// 'undelete' action or unknown action
+		// unknown or unsupported action
 		return Response.error(Error.NOT_SUPPORTED)
 	}
 	if (res && res.filename) {

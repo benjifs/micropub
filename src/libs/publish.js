@@ -23,14 +23,18 @@ const uploadFiles = async files => {
 }
 
 const handleUpdate = (body, parsed) => {
+	let updated = false
 	if (!body && !body.replace && !body.add && !body.delete) {
 		return
 	}
 	if (body.delete && Array.isArray(body.delete)) {
 		for (let key of body.delete) {
-			delete parsed[key]
+			if (parsed[key]) {
+				updated = true
+				delete parsed[key]
+			}
 		}
-		return parsed
+		return updated ? parsed : null
 	}
 	const updates = utils.removeEmpty(parse.fromJSON({
 		'type': parsed.type,
@@ -47,6 +51,7 @@ const handleUpdate = (body, parsed) => {
 				continue
 			}
 			if (body.add) {
+				updated = true
 				parsed[key] = parsed[key] || []
 				parsed[key] = [ ...parsed[key], ...updates[key] ]
 			} else if (body.delete && parsed[key] && Array.isArray(parsed[key])) {
@@ -55,16 +60,17 @@ const handleUpdate = (body, parsed) => {
 				for (let item of value) {
 					// Remove `item` from `parsed[key]` if it exists
 					if (parsed[key].includes(item)) {
+						updated = true
 						parsed[key].splice(parsed[key].indexOf(item), 1)
 					}
 				}
 			}
 		}
-		return parsed
+		return updated ? parsed : null
 	}
 }
 
-export default {
+const publish = {
 	addContent: async (data, isJSON) => {
 		const parsed = isJSON ? parse.fromJSON(data) : parse.fromForm(data)
 		console.log('└─>', parsed)
@@ -125,7 +131,14 @@ export default {
 		}
 		return { 'filename': filename }
 	},
-	deleteContent: async (url) => {
+	deleteContent: async (url, permanent) => {
+		if (!permanent) {
+			return publish.updateContent(url, {
+				'add': {
+					'deleted': [ 'true' ]
+				}
+			})
+		}
 		const filename = utils.urlToFilename(url)
 		if (!filename) {
 			return { 'error': 'invalid url' }
@@ -139,5 +152,14 @@ export default {
 			return { 'error': 'file cannot be deleted' }
 		}
 		return { 'filename': filename }
+	},
+	undeleteContent: async (url) => {
+		// undelete supported even if `PERMANENT_DELETE` is true
+		// but only if file has the property `deleted`
+		return publish.updateContent(url, {
+			'delete': [ 'deleted' ]
+		})
 	}
 }
+
+export default publish

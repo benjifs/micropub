@@ -52,8 +52,11 @@ const handleUpdate = (body, parsed) => {
 			}
 			if (body.add) {
 				updated = true
-				parsed[key] = parsed[key] || []
-				parsed[key] = [ ...parsed[key], ...updates[key] ]
+				if (parsed[key]) {
+					parsed[key] = [ ...parsed[key], ...value ]
+				} else {
+					parsed[key] = value
+				}
 			} else if (body.delete && parsed[key] && Array.isArray(parsed[key])) {
 				// Only deletes here if the original value was an array
 				// Look for the specific item to delete from a potential list of values
@@ -71,6 +74,8 @@ const handleUpdate = (body, parsed) => {
 }
 
 const publish = {
+	handleUpdate: handleUpdate,
+
 	addContent: async (data, isJSON) => {
 		const parsed = isJSON ? parse.fromJSON(data) : parse.fromForm(data)
 		console.log('└─>', parsed)

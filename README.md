@@ -49,6 +49,8 @@ Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also b
 | MEDIA_ENDPOINT | If using an external `MEDIA_ENDPOINT`. Returned in [configuration](https://micropub.spec.indieweb.org/#configuration) | `NETLIFY_URL/.netlify/functions/media` |
 | CONTENT_DIR | Directory where posts are uploaded to | `src` |
 | MEDIA_DIR | Directory where media is uploaded to | `uploads` |
+| --- | --- | --- |
+| PERMANENT_DELETE | If set, a `delete` action will delete the file from the repo | File will be "marked" as deleted and the static site generator handles not rendering the file |
 
 ### Additional Environment Variables
 * `DEBUG`: Will prevent `POST`, `PUT`, and `DELETE` requests to go to GitHub or GitLab. Only used for debugging.
@@ -66,6 +68,7 @@ The current supported content types are:
 * create - allows the client to create posts on behalf of the user
 * update - allows the client to edit existing posts
 * delete - allows the client to delete posts
+* undelete - allows the client to undelete posts
 * media - allows the client to upload files to the media endpoint
 
 ## Troubleshooting

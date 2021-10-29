@@ -4,6 +4,7 @@ import got from 'got'
 import { Base64 } from './utils'
 
 const GitHub = {
+	// https://docs.github.com/en/rest/reference/repos#create-or-update-file-contents
 	createFile: async (filename, content) => {
 		console.log('GITHUB.createFile', content)
 		return await GitHub.upload('PUT', filename, {
@@ -12,6 +13,7 @@ const GitHub = {
 		})
 	},
 
+	// https://docs.github.com/en/rest/reference/repos#create-or-update-file-contents
 	updateFile: async (filename, content, original) => {
 		console.log('GITHUB.updateFile', content)
 		return await GitHub.upload('PUT', filename, {
@@ -21,6 +23,7 @@ const GitHub = {
 		})
 	},
 
+	// https://docs.github.com/en/rest/reference/repos#create-or-update-file-contents
 	uploadImage: async (filename, file) => {
 		console.log('GITHUB.uploadImage', filename, file.filename)
 		return await GitHub.upload('PUT', filename, {
@@ -36,6 +39,7 @@ const GitHub = {
 		}
 	},
 
+	// https://docs.github.com/en/rest/reference/repos#get-repository-content
 	getFile: async (filename) => {
 		const body = await GitHub.request('GET',
 			encodeURIComponent(filename) + (process.env.GIT_BRANCH ? `?ref=${process.env.GIT_BRANCH}` : '')
@@ -49,9 +53,10 @@ const GitHub = {
 		}
 	},
 
-	// https://docs.github.com/en/rest/reference/repos#get-repository-content
+	// Same as `getFile`
+	// Keeping as a separate function in case this needs to change since
 	// GitHub Contents returns first 1000 files sorted by filename in dir
-	// Might need to switch to tree API later
+	// Might switch to tree API later
 	// https://docs.github.com/en/rest/reference/git#get-a-tree
 	getDirectory: async (dir) => {
 		const body = await GitHub.request('GET',
@@ -62,6 +67,7 @@ const GitHub = {
 		}
 	},
 
+	// https://docs.github.com/en/rest/reference/repos#delete-a-file
 	deleteFile: async (filename, original) => {
 		const body = await GitHub.request('DELETE',
 			encodeURIComponent(filename),

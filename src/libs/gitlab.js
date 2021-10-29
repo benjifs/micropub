@@ -4,6 +4,7 @@ import got from 'got'
 import { Base64 } from './utils'
 
 const GitLab = {
+	// https://docs.gitlab.com/ee/api/repository_files.html#get-file-from-repository
 	createFile: async (filename, content) => {
 		console.log('GITLAB.createFile', content)
 		return await GitLab.upload('POST', filename, {
@@ -12,6 +13,7 @@ const GitLab = {
 		})
 	},
 
+	// https://docs.gitlab.com/ee/api/repository_files.html#update-existing-file-in-repository
 	updateFile: async (filename, content) => {
 		console.log('GITLAB.updateFile', content)
 		return await GitLab.upload('PUT', filename, {
@@ -20,6 +22,7 @@ const GitLab = {
 		})
 	},
 
+	// https://docs.gitlab.com/ee/api/repository_files.html#get-file-from-repository
 	uploadImage: async (filename, file) => {
 		console.log('GITLAB.uploadImage', filename, file.filename)
 		return await GitLab.upload('POST', filename, {
@@ -38,6 +41,7 @@ const GitLab = {
 		}
 	},
 
+	// https://docs.gitlab.com/ee/api/repository_files.html#get-file-from-repository
 	getFile: async (filename) => {
 		const body = await GitLab.request('GET',
 			`repository/files/?ref=${process.env.GIT_BRANCH}&path=${encodeURIComponent(filename)}`

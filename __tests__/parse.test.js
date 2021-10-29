@@ -15,7 +15,8 @@ describe('parse', () => {
 			'like-of': [ likedURL ],
 			'bookmark-of': [ likedURL ],
 			'in-reply-to': [ likedURL ],
-			'rsvp': [ 'maybe' ]
+			'rsvp': [ 'maybe' ],
+			'deleted': [ true ]
 		}
 	}
 
@@ -28,7 +29,8 @@ describe('parse', () => {
 		'like-of': likedURL,
 		'bookmark-of': likedURL,
 		'in-reply-to': likedURL,
-		'rsvp': 'maybe'
+		'rsvp': 'maybe',
+		'deleted': true
 	}
 
 	const fm = '---\n' +
@@ -43,6 +45,7 @@ describe('parse', () => {
 	`bookmark-of: ${likedURL}\n` +
 	`in-reply-to: ${likedURL}\n` +
 	'rsvp: maybe\n' +
+	'deleted: true\n' +
 	'---\n' +
 	'\n' +
 	'Content goes here\r\nAnd thats all'
@@ -94,6 +97,7 @@ describe('parse', () => {
 			expect(data['bookmark-of']).toBe(likedURL)
 			expect(data['in-reply-to']).toBe(likedURL)
 			expect(data['rsvp']).toBe('maybe')
+			expect(data['deleted']).toBe(true)
 		})
 
 		test('data without categories', () => {
@@ -124,6 +128,7 @@ describe('parse', () => {
 			expect(data['bookmark-of']).toBe(likedURL)
 			expect(data['in-reply-to']).toBe(likedURL)
 			expect(data['rsvp']).toBe('maybe')
+			expect(data['deleted']).toBe(true)
 		})
 
 		const form2 = { ...form }
@@ -162,6 +167,7 @@ describe('parse', () => {
 			expect(parsed['bookmark-of']).toBe(likedURL)
 			expect(parsed['in-reply-to']).toBe(likedURL)
 			expect(parsed['rsvp']).toBe('maybe')
+			expect(parsed['deleted']).toBeTruthy()
 		})
 	})
 

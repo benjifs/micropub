@@ -58,11 +58,12 @@ Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also b
 ## Content Types
 
 The current supported content types are:
+* [article](https://indieweb.org/article) - `/CONTENT_DIR/articles/`
 * [bookmark](https://indieweb.org/bookmark) - `/CONTENT_DIR/bookmarks/`
 * [like](https://indieweb.org/like) - `/CONTENT_DIR/likes/`
 * [note](https://indieweb.org/note) - `/CONTENT_DIR/notes/`
-* [article](https://indieweb.org/article) - `/CONTENT_DIR/posts/`
 * [rsvp](https://indieweb.org/rsvp) - `/CONTENT_DIR/rsvp/`
+* [reply](https://indieweb.org/reply) - `/CONTENT_DIR/notes/`
 
 ## Scopes
 * create - allows the client to create posts on behalf of the user

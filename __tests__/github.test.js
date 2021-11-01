@@ -11,7 +11,7 @@ describe('GitHub', () => {
 	const path = `/repos/${process.env.GITHUB_USER}/${process.env.GITHUB_REPO}/contents/`
 	const branch = process.env.GIT_BRANCH ? `ref=${process.env.GIT_BRANCH}` : ''
 
-	const filename = 'src/posts/123.md'
+	const filename = 'src/articles/123.md'
 	const filePath = `${path}${encodeURIComponent(filename)}`
 
 	const content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'

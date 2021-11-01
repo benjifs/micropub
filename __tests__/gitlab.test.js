@@ -13,7 +13,7 @@ describe('GitLab', () => {
 	const treeAPI = `${path}/repository/tree/`
 	const branch = process.env.GIT_BRANCH ? `ref=${process.env.GIT_BRANCH}` : ''
 
-	const filename = 'src/posts/123.md'
+	const filename = 'src/articles/123.md'
 	const filePath = `${filesAPI}${encodeURIComponent(filename)}`
 
 	const content = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.'

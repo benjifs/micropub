@@ -42,12 +42,12 @@ describe('publish', () => {
 			expect(res.filename).toContain('notes/')
 		})
 
-		test('add post', async () => {
+		test('add article', async () => {
 			entry['name'] = 'Title'
 			entry['content'] = form['content']
 			const res = await publish.addContent(entry)
 			expect(res).toHaveProperty('filename')
-			expect(res.filename).toContain('posts/')
+			expect(res.filename).toContain('articles/')
 		})
 
 		test('add like', async () => {

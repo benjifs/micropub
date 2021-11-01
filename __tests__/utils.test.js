@@ -69,9 +69,9 @@ describe('utils', () => {
 		})
 
 		test('valid URL', () => {
-			const filename = utils.urlToFilename('https://domain.tld/posts/123')
+			const filename = utils.urlToFilename('https://domain.tld/articles/123')
 			expect(filename).toBeDefined()
-			expect(filename).toBe('src/posts/123.md')
+			expect(filename).toBe('src/articles/123.md')
 		})
 	})
 

@@ -11,7 +11,7 @@ describe('source', () => {
 	const path = `/repos/${process.env.GITHUB_USER}/${process.env.GITHUB_REPO}/contents/`
 	const branch = process.env.GIT_BRANCH ? `ref=${process.env.GIT_BRANCH}` : ''
 
-	const filename = 'src/posts/123.md'
+	const filename = 'src/articles/123.md'
 	const filePath = `${path}${encodeURIComponent(filename)}`
 
 	const fm = '---\n' +
@@ -43,7 +43,7 @@ describe('source', () => {
 			.get(`${filePath}?${branch}`)
 			.reply(404)
 
-		const res = await source.get('https://domain.tld/posts/123')
+		const res = await source.get('https://domain.tld/articles/123')
 		mock.done()
 		expect(res).toHaveProperty('error')
 	})
@@ -53,7 +53,7 @@ describe('source', () => {
 			.get(`${filePath}?${branch}`)
 			.reply(200, { content: b64, sha })
 
-		const res = await source.get('https://domain.tld/posts/123')
+		const res = await source.get('https://domain.tld/articles/123')
 		mock.done()
 		expect(res).toHaveProperty('source')
 		expect(res.source).toHaveProperty('type')
@@ -70,7 +70,7 @@ describe('source', () => {
 			.get(`${filePath}?${branch}`)
 			.reply(200, { content: b64, sha })
 
-		const res = await source.get('https://domain.tld/posts/123', [ 'content', 'name', 'mp-slug' ])
+		const res = await source.get('https://domain.tld/articles/123', [ 'content', 'name', 'mp-slug' ])
 		mock.done()
 		expect(res).toHaveProperty('source')
 		expect(res.source).toHaveProperty('properties')

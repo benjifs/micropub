@@ -64,7 +64,7 @@ const content = {
 			return 'rsvp'
 		}
 		if (data['name']) {
-			return 'posts'
+			return 'articles'
 		}
 		return 'notes'
 	},

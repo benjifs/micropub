@@ -40,7 +40,7 @@ describe('content', () => {
 			expect(fm).toContain('\ndeleted: true\n')
 		})
 
-		test('draft post', () => {
+		test('draft article', () => {
 			data.draft = true
 			const fm = content.output(data)
 			expect(fm).toContain('\ndraft: true\n')
@@ -105,12 +105,12 @@ describe('content', () => {
 			expect(formatted.data.updated).not.toBe(updated)
 		})
 
-		test('is post', () => {
+		test('is article', () => {
 			const formatted = content.format(data)
 			expect(formatted).toHaveProperty('slug')
-			expect(formatted.slug).toMatch(/^posts\/.*/)
+			expect(formatted.slug).toMatch(/^articles\/.*/)
 			expect(formatted).toHaveProperty('filename')
-			expect(formatted.filename).toMatch(/^src\/posts\/.*/)
+			expect(formatted.filename).toMatch(/^src\/articles\/.*/)
 			expect(formatted.filename).toBe(`src/${formatted.slug}.md`)
 		})
 
@@ -157,8 +157,8 @@ describe('content', () => {
 			expect(content.getType(data)).toBe('rsvp')
 		})
 
-		test('is post', () => {
-			expect(content.getType({ 'name': 'hello' })).toBe('posts')
+		test('is article', () => {
+			expect(content.getType({ 'name': 'hello' })).toBe('articles')
 		})
 
 		test('is note', () => {

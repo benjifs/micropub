@@ -8,6 +8,11 @@
 	functions = "lambda"
 	publish = "public"
 
+[[redirects]]
+	from = "/*"
+	to = "/.netlify/functions/:splat"
+	status = 200
+
 [template.environment]
 	GIT_TOKEN = "Personal Access Token"
 	GIT_BRANCH = "Branch name to add posts to (Must already exist)"

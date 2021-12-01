@@ -2,6 +2,7 @@
 import articleTitle from 'article-title'
 import fm from 'front-matter'
 import got from 'got'
+import { utils } from './utils'
 
 const getPropertyValue = prop => {
 	if (prop) {
@@ -34,67 +35,77 @@ export default {
 		if (!json || !json.type || !json.properties) {
 			return null
 		}
-		const { type, properties } = json
-		const category = itemsToArray(properties.category)
-		return {
-			'type': getPropertyValue(type),
-			'content': getPropertyValue(properties.content),
-			'name': getPropertyValue(properties.name),
-			'category': category.length ? category : null,
-			'photo': itemsToArray(properties.photo),
-			'slug': getPropertyValue(properties['mp-slug']),
-			'status': getPropertyValue(properties['post-status']),
-			'visibility': getPropertyValue(properties['visibility']),
-			'like-of': getPropertyValue(properties['like-of']),
-			'bookmark-of': getPropertyValue(properties['bookmark-of']),
-			'in-reply-to': getPropertyValue(properties['in-reply-to']),
-			'rsvp': getPropertyValue(properties['rsvp']),
-			'deleted': getPropertyValue(properties['deleted'])
+		const parsed = {}
+		for (let [key, value] of Object.entries(json)) {
+			if (key == 'properties') {
+				for (let [propKey, propValue] of Object.entries(value)) {
+					if (propKey == 'category') {
+						parsed[propKey] = itemsToArray(propValue)
+					} else if (propKey.startsWith('mp-')) {
+						propKey = propKey.slice(3)
+						parsed[propKey] = getPropertyValue(propValue)
+					} else {
+						parsed[propKey] = getPropertyValue(propValue)
+					}
+				}
+			} else {
+				parsed[key] = getPropertyValue(value)
+			}
 		}
+		return utils.removeEmpty(parsed)
 	},
 
 	fromForm: form => {
 		if  (!form || !form.h) {
 			return null
 		}
-		const category = itemsToArray(form.category)
-		return {
-			'type': form.h ? `h-${form.h}` : null,
-			'content': form.content,
-			'name': form.name,
-			'category': category.length ? category : null,
-			'photo': [
-				// photos could come in as either `photo` or `file`
-				// handle `photo[]` and `file[]` for multiple files for now
-				...itemsToArray(form.photo), ...itemsToArray(form.file),
-				...itemsToArray(form['photo[]']), ...itemsToArray(form['file[]'])],
-			'slug': form['mp-slug'],
-			'status': form['post-status'],
-			'visibility': form.visibility,
-			'like-of': form['like-of'],
-			'bookmark-of': form['bookmark-of'],
-			'in-reply-to': form['in-reply-to'],
-			'rsvp': form['rsvp'],
-			'deleted': form['deleted']
+		const parsed = {}
+		for (let [key, value] of Object.entries(form)) {
+			if (key == 'h') {
+				parsed['type'] = `h-${value}`
+			} else if (!parsed['photo'] && ['photo', 'file', 'photo[]', 'file[]'].includes(key)) {
+				parsed['photo'] = [
+					// photos could come in as either `photo` or `file`
+					// handle `photo[]` and `file[]` for multiple files for now
+					...itemsToArray(form.photo), ...itemsToArray(form.file),
+					...itemsToArray(form['photo[]']), ...itemsToArray(form['file[]'])]
+			} else if (key.startsWith('mp-')) {
+				key = key.slice(3)
+				parsed[key] = value
+			} else if (key == 'category') {
+				parsed[key] = itemsToArray(value)
+			} else {
+				parsed[key] = value
+			}
 		}
+		return utils.removeEmpty(parsed)
 	},
 
 	fromFrontMatter: data => {
-		const { attributes, body } = fm(data.toString())
-		return {
-			'type': attributes.type || 'h-entry',
-			'content': body,
-			'name': attributes.title,
-			'category': attributes.tags,
-			'date': attributes.date.toISOString(),
-			'updated': attributes.updated ? attributes.updated.toISOString : null,
-			'status': attributes.draft ? 'draft' : null,
-			'like-of': attributes['like-of'],
-			'bookmark-of': attributes['bookmark-of'],
-			'in-reply-to': attributes['in-reply-to'],
-			'rsvp': attributes['rsvp'],
-			'deleted': attributes['deleted']
+		// Properties that should be renamed from the frontmatter output
+		// to a consistent structure like above
+		const keyMap = {
+			'title': 'name',
+			'tags': 'category'
 		}
+		const { attributes, body } = fm(data.toString())
+		const parsed = {}
+
+		for (let [key, value] of Object.entries(attributes)) {
+			if (keyMap[key]) {
+				parsed[keyMap[key]] = value
+			} else if (['date', 'updated'].includes(key)) {
+				parsed[key] = value.toISOString()
+			} else if (['draft'].includes(key)) {
+				parsed['status'] = key
+			} else {
+				parsed[key] = value
+			}
+		}
+		parsed['type'] = parsed['type'] || 'h-entry'
+		parsed['content'] = body
+
+		return utils.removeEmpty(parsed)
 	},
 
 	toSource: data => {

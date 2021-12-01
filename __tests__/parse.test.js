@@ -112,7 +112,7 @@ describe('parse', () => {
 			expect(data).toBeTruthy()
 			expect(data.type).toBe('h-entry')
 			expect(data.name).toBe('Title')
-			expect(data.category).toBe(null)
+			expect(data.category).toBeUndefined()
 		})
 	})
 

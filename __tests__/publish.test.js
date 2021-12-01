@@ -202,7 +202,7 @@ describe('publish', () => {
 		test('delete two items of property - property doesnt exist', () => {
 			let updated = publish.handleUpdate({
 				'delete': {
-					'tags': [ 'two', '3' ]
+					'tagged': [ 'two', '3' ]
 				}
 			}, parsed)
 			expect(updated).toBeFalsy()
@@ -239,13 +239,24 @@ describe('publish', () => {
 			expect(updated.category).toHaveLength(2)
 		})
 
-		test('cant add unknown property', () => {
+		test('update category with tags key', () => {
+			const original = parsed.category.length
 			let updated = publish.handleUpdate({
 				'add': {
 					'tags': [ 'a', 'b' ]
 				}
 			}, parsed)
-			expect(updated).toBeFalsy()
+			expect(updated).toHaveProperty('category')
+			expect(updated.category).toHaveLength(original + 2)
+		})
+
+		test('add unknown property', () => {
+			let updated = publish.handleUpdate({
+				'add': {
+					'unknown': 'hello'
+				}
+			}, parsed)
+			expect(updated).toHaveProperty('unknown', 'hello')
 		})
 	})
 })

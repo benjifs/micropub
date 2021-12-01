@@ -4,15 +4,9 @@ import fm from 'front-matter'
 import got from 'got'
 import { utils } from './utils'
 
-const getPropertyValue = prop => {
-	if (prop) {
-		return Array.isArray(prop) ? prop[0] : prop
-	}
-}
+const getPropertyValue = prop => Array.isArray(prop) ? prop[0] : prop
 
-const itemsToArray = items => {
-	return !items ? [] : (Array.isArray(items) ? items : [items])
-}
+const itemsToArray = items => !items ? [] : (Array.isArray(items) ? items : [items])
 
 const getPageTitle = async urlString => {
 	try {
@@ -24,6 +18,13 @@ const getPageTitle = async urlString => {
 	} catch(err) {
 		console.error('Could not parse:', urlString)
 	}
+}
+
+// Properties that should be renamed from the frontmatter output
+// to a consistent structure like above
+const renameProperties = {
+	'title': 'name',
+	'tags': 'category'
 }
 
 export default {
@@ -39,6 +40,9 @@ export default {
 		for (let [key, value] of Object.entries(json)) {
 			if (key == 'properties') {
 				for (let [propKey, propValue] of Object.entries(value)) {
+					if (renameProperties[propKey]) {
+						propKey = renameProperties[propKey]
+					}
 					if (propKey == 'category') {
 						parsed[propKey] = itemsToArray(propValue)
 					} else if (propKey.startsWith('mp-')) {
@@ -82,18 +86,12 @@ export default {
 	},
 
 	fromFrontMatter: data => {
-		// Properties that should be renamed from the frontmatter output
-		// to a consistent structure like above
-		const keyMap = {
-			'title': 'name',
-			'tags': 'category'
-		}
 		const { attributes, body } = fm(data.toString())
 		const parsed = {}
 
 		for (let [key, value] of Object.entries(attributes)) {
-			if (keyMap[key]) {
-				parsed[keyMap[key]] = value
+			if (renameProperties[key]) {
+				parsed[renameProperties[key]] = value
 			} else if (['date', 'updated'].includes(key)) {
 				parsed[key] = value.toISOString()
 			} else if (['draft'].includes(key)) {

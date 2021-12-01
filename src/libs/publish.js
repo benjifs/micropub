@@ -5,6 +5,9 @@ import parse from './parse'
 import { utils } from './utils'
 
 const uploadFiles = async files => {
+	if (!files) {
+		return []
+	}
 	const photos = []
 	for (let file of files) {
 		if (file.filename) {
@@ -86,15 +89,17 @@ const publish = {
 			!(parsed.content || parsed.name || (parsed['in-reply-to'] && parsed.rsvp))) {
 			return { 'error': 'nothing to add' }
 		}
-		const uploaded = await uploadFiles(parsed.photo)
-		if (uploaded && uploaded.length) {
-			let imageContent = ''
-			for (let img of uploaded) {
-				if (img.value) {
-					imageContent += `![${img.alt || ''}](/${img.value})\n\n`
+		if (parsed.photo) {
+			const uploaded = await uploadFiles(parsed.photo)
+			if (uploaded && uploaded.length) {
+				let imageContent = ''
+				for (let img of uploaded) {
+					if (img.value) {
+						imageContent += `![${img.alt || ''}](/${img.value})\n\n`
+					}
 				}
+				parsed.content = `${imageContent}${parsed.content}`
 			}
-			parsed.content = `${imageContent}${parsed.content}`
 		}
 		const out = content.format(parsed)
 		if (!out || !out.filename || !out.formatted) {

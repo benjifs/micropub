@@ -12,16 +12,13 @@ const getPageTitle = async urlString => {
 	try {
 		const url = new URL(urlString)
 		const res = await got(url)
-		if (res) {
-			return articleTitle(res.body)
-		}
+		return res && res.body ? articleTitle(res.body) : null
 	} catch(err) {
 		console.error('Could not parse:', urlString)
 	}
 }
 
-// Properties that should be renamed from the frontmatter output
-// to a consistent structure like above
+// Properties that should be renamed to keep a consistent structure
 const renameProperties = {
 	'title': 'name',
 	'tags': 'category'
@@ -42,12 +39,11 @@ export default {
 				for (let [propKey, propValue] of Object.entries(value)) {
 					if (renameProperties[propKey]) {
 						propKey = renameProperties[propKey]
+					} else if (propKey.startsWith('mp-')) {
+						propKey = propKey.slice(3)
 					}
 					if (propKey == 'category') {
 						parsed[propKey] = itemsToArray(propValue)
-					} else if (propKey.startsWith('mp-')) {
-						propKey = propKey.slice(3)
-						parsed[propKey] = getPropertyValue(propValue)
 					} else {
 						parsed[propKey] = getPropertyValue(propValue)
 					}

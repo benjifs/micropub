@@ -1,22 +1,40 @@
 
 import { utils } from './utils'
 
+const renameProperties = {
+	'name': 'title',
+	'category': 'tags'
+}
+
+const ignoreProperties = [
+	'content', 'photo'
+]
+
 const content = {
 	output: data => {
 		if (!data) {
 			return null
 		}
+
+		let fm = ''
+		for (let [key, value] of Object.entries(data)) {
+			if (ignoreProperties.includes(key)) {
+				continue
+			}
+			if (renameProperties[key]) {
+				key = renameProperties[key]
+			}
+			if (key == 'tags' && value && value.length) {
+				fm += `${key}:\n - ${value.join('\n - ')}\n`
+			} else if (key == 'title') { // Always force title to have double quotes
+				fm += `${key}: "${value}"\n`
+			} else {
+				fm += `${key}: ${value}\n`
+			}
+		}
+
 		return '---\n' +
-			`date: ${data.date}\n` +
-			(data.name ? `title: "${data.name}"\n` : '') +
-			(data.category && data.category.length ? `tags:\n - ${data.category.join('\n - ')}\n` : '') +
-			(data.draft ? 'draft: true\n' : '') +
-			(data.updated ? `updated: ${data.updated}\n` : '') +
-			(data['like-of'] ? `like-of: ${data['like-of']}\n` : '') +
-			(data['bookmark-of'] ? `bookmark-of: ${data['bookmark-of']}\n` : '') +
-			(data['in-reply-to'] ? `in-reply-to: ${data['in-reply-to']}\n` : '') +
-			(data['rsvp'] ? `rsvp: ${data['rsvp']}\n` : '') +
-			(data['deleted'] ? 'deleted: true\n' : '') +
+			fm +
 			'---\n\n' +
 			`${data.content || ''}`
 	},

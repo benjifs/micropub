@@ -83,7 +83,7 @@ const publish = {
 		const parsed = isJSON ? parse.fromJSON(data) : parse.fromForm(data)
 		console.log('└─>', parsed)
 		if (parsed && parsed['like-of']) {
-			parsed.name = await parse.getPageTitle(parsed['like-of']) || parsed.name
+			parsed.name = parsed.name || await parse.getPageTitle(parsed['like-of'])
 		}
 		if (!parsed ||
 			!(parsed.content || parsed.name || (parsed['in-reply-to'] && parsed.rsvp))) {

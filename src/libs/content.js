@@ -50,19 +50,24 @@ const content = {
 			data.updated = date.toISOString()
 		}
 		const type = content.getType(data) || ''
-		let slug
-		if (data.slug) {
-			slug = `${type}/${utils.slugify(data.slug)}`
-		} else {
-			const ts = Math.round(date / 1000)
-			slug = `${type}/${ts}` + (data.name ? `-${utils.slugify(data.name)}` : '')
+		let slugParts = []
+		if (process.env.FILENAME_FULL_DATE) { // Jekyll post filenames must have YYYY-MM-DD in the filename
+			slugParts.push(date.toISOString().substr(0, 10)) // or split('T')[0]
 		}
+		if (data.slug) {
+			slugParts.push(utils.slugify(data.slug))
+		} else if (data.name) {
+			slugParts.push(utils.slugify(data.name))
+		} else {
+			slugParts.push(Math.round(date / 1000))
+		}
+		const slug = slugParts.join('-')
 		const dir = (process.env.CONTENT_DIR || 'src').replace(/\/$/, '')
-		const filename = `${dir}/${slug}.md`
+		const filename = `${dir}/${type}/${slug}.md`
 
 		return {
 			'filename': filename,
-			'slug': slug,
+			'slug': `${type}/${slug}`,
 			'formatted': content.output(data),
 			'data': data
 		}

@@ -12,13 +12,15 @@ import auth from './libs/auth'
 import source from './libs/source'
 import publish from './libs/publish'
 import { Error, Response } from './libs/response'
+import { parseSyndicationTargets } from './libs/config'
 
 const getHandler = async query => {
 	let res
+	const syndicateTo = parseSyndicationTargets(process.env.SYNDICATE_TO) || []
 	if (query.q === 'config') {
 		return Response.send(200, {
 			'media-endpoint': process.env.MEDIA_ENDPOINT || `${process.env.URL || ''}/.netlify/functions/media`,
-			'syndicate-to': []
+			'syndicate-to': syndicateTo
 		})
 	} else if (query.q === 'source' && query.url) {
 		res = await source.get(query.url, query.properties || query['properties[]'])
@@ -27,7 +29,7 @@ const getHandler = async query => {
 		}
 	} else if (query.q === 'syndicate-to') {
 		return Response.send(200, {
-			'syndicate-to': []
+			'syndicate-to': syndicateTo
 		})
 	}
 	return Response.error(Error.INVALID, res && res.error)

@@ -43,6 +43,8 @@ If your static site's repository is on [GitLab](https://gitlab.com), fork this r
 ### Optional
 | name | description | default |
 | --- | --- | --- |
+| SYNDICATE_TO | JSON string (single object or array) of [syndication targets](https://www.w3.org/TR/micropub/#syndication-targets) | [] |
+| --- | --- | --- |
 | GIT_AUTHOR_EMAIL | Author email for commits | `GIT_TOKEN` owner's email |
 | GIT_AUTHOR_NAME | Author name for commits | `GIT_TOKEN` owner's name |
 | --- | --- | --- |

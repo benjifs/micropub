@@ -48,6 +48,11 @@ const utils = {
 			console.error(err)
 			console.error('Invalid URL:', urlString)
 		}
+	},
+
+	compareArrays: (arr1, arr2) => {
+		return Array.isArray(arr1) && Array.isArray(arr2) &&
+			arr1.filter(i => arr2.includes(i)).length > 0
 	}
 }
 

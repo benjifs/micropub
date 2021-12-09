@@ -85,8 +85,8 @@ const publish = {
 		if (parsed && parsed['like-of']) {
 			parsed.name = parsed.name || await parse.getPageTitle(parsed['like-of'])
 		}
-		if (!parsed ||
-			!(parsed.content || parsed.name || (parsed['in-reply-to'] && parsed.rsvp))) {
+		const requireOne = [ 'name', 'summary', 'content', 'in-reply-to', 'repost-of' ]
+		if (!parsed || !utils.compareArrays(requireOne, Object.keys(parsed))) {
 			return { 'error': 'nothing to add' }
 		}
 		if (parsed.photo) {

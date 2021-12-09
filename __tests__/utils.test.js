@@ -105,4 +105,20 @@ describe('utils', () => {
 			expect(res).not.toHaveProperty('four')
 		})
 	})
+
+	describe('compareArrays', () => {
+		test('two arrays have at least one matching value', () => {
+			expect(utils.compareArrays(['one', 'two'], ['four', 'five', 'two'])).toBeTruthy()
+			expect(utils.compareArrays(['two'], ['four', 'five', 'two'])).toBeTruthy()
+			expect(utils.compareArrays(['one', 'two', 'three'], ['two'])).toBeTruthy()
+			expect(utils.compareArrays(['one'], ['one'])).toBeTruthy()
+		})
+
+		test('invalid parameters', () => {
+			expect(utils.compareArrays(['one', 'two'], 'two')).toBeFalsy()
+			expect(utils.compareArrays('two', 'two')).toBeFalsy()
+			expect(utils.compareArrays()).toBeFalsy()
+			expect(utils.compareArrays(true, false)).toBeFalsy()
+		})
+	})
 })

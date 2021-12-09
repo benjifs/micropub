@@ -105,12 +105,6 @@ describe('publish', () => {
 			expect(res).toHaveProperty('error', 'nothing to add')
 		})
 
-		test('reply without content (or RSVP)', async () => {
-			entry['in-reply-to'] = 'https://domain.tld'
-			const res = await publish.addContent(entry)
-			expect(res).toHaveProperty('error', 'nothing to add')
-		})
-
 		test('RSVP without reply', async () => {
 			entry['rsvp'] = 'yes'
 			const res = await publish.addContent(entry)

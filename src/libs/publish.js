@@ -85,11 +85,7 @@ const publish = {
 		if (parsed && parsed['like-of']) {
 			parsed.name = parsed.name || await parse.getPageTitle(parsed['like-of'])
 		}
-		const requireOne = [ 'name', 'summary', 'content', 'in-reply-to', 'repost-of' ]
-		if (!parsed || !utils.compareArrays(requireOne, Object.keys(parsed))) {
-			return { 'error': 'nothing to add' }
-		}
-		if (parsed.photo) {
+		if (parsed && parsed.photo) {
 			const uploaded = await uploadFiles(parsed.photo)
 			if (uploaded && uploaded.length) {
 				let imageContent = ''
@@ -100,6 +96,9 @@ const publish = {
 				}
 				parsed.content = `${imageContent}${parsed.content}`
 			}
+		}
+		if (!utils.objectHasKeys(parsed)) {
+			return { 'error': 'nothing to add' }
 		}
 		const out = content.format(parsed)
 		if (!out || !out.filename || !out.formatted) {

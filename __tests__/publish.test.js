@@ -87,27 +87,8 @@ describe('publish', () => {
 	})
 
 	describe('addContent: FAIL', () => {
-		let entry
-		beforeEach(() => {
-			entry = {
-				'h': form['h']
-			}
-		})
-
-		test('no content or name', async () => {
-			const res = await publish.addContent(entry)
-			expect(res).toHaveProperty('error', 'nothing to add')
-		})
-
-		test('bookmark without name', async () => {
-			entry['bookmark-of'] = 'https://domain.tld'
-			const res = await publish.addContent(entry)
-			expect(res).toHaveProperty('error', 'nothing to add')
-		})
-
-		test('RSVP without reply', async () => {
-			entry['rsvp'] = 'yes'
-			const res = await publish.addContent(entry)
+		test('only if no properties sent', async () => {
+			const res = await publish.addContent({})
 			expect(res).toHaveProperty('error', 'nothing to add')
 		})
 	})

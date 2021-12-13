@@ -106,19 +106,44 @@ describe('utils', () => {
 		})
 	})
 
-	describe('compareArrays', () => {
-		test('two arrays have at least one matching value', () => {
-			expect(utils.compareArrays(['one', 'two'], ['four', 'five', 'two'])).toBeTruthy()
-			expect(utils.compareArrays(['two'], ['four', 'five', 'two'])).toBeTruthy()
-			expect(utils.compareArrays(['one', 'two', 'three'], ['two'])).toBeTruthy()
-			expect(utils.compareArrays(['one'], ['one'])).toBeTruthy()
+	describe('isObject', () => {
+		test('undefined', () => {
+			expect(utils.isObject()).toBeFalsy()
 		})
 
-		test('invalid parameters', () => {
-			expect(utils.compareArrays(['one', 'two'], 'two')).toBeFalsy()
-			expect(utils.compareArrays('two', 'two')).toBeFalsy()
-			expect(utils.compareArrays()).toBeFalsy()
-			expect(utils.compareArrays(true, false)).toBeFalsy()
+		test('Boolean', () => {
+			expect(utils.isObject(true)).toBeFalsy()
+		})
+
+		test('String', () => {
+			expect(utils.isObject('hello')).toBeFalsy()
+		})
+
+		test('Number', () => {
+			expect(utils.isObject(1)).toBeFalsy()
+		})
+
+		test('Empty Array', () => {
+			expect(utils.isObject([])).toBeFalsy()
+		})
+
+		test('Array', () => {
+			expect(utils.isObject(['1', '2'])).toBeFalsy()
+		})
+
+		test('Empty Object', () => {
+			expect(utils.isObject({})).toBeTruthy()
+		})
+
+		test('Object', () => {
+			expect(utils.isObject({'one': 1, 'two': 2})).toBeTruthy()
+		})
+	})
+
+	describe('objectHasKeys', () => {
+		test('is object and has keys', () => {
+			expect(utils.objectHasKeys({})).toBeFalsy()
+			expect(utils.objectHasKeys({'one': 1, 'two': 2})).toBeTruthy()
 		})
 	})
 })

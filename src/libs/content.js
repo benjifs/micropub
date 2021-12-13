@@ -74,7 +74,7 @@ const content = {
 	},
 
 	getType: data => {
-		if (!data || typeof data !== 'object' || !Object.keys(data).length) {
+		if (!utils.objectHasKeys(data)) {
 			return null
 		}
 		if (data['like-of']) {

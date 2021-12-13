@@ -16,6 +16,10 @@ const utils = {
 		return allowed
 	},
 
+	isObject: obj => Object.prototype.toString.call(obj) === '[object Object]',
+
+	objectHasKeys: obj => utils.isObject(obj) && !!Object.keys(obj).length,
+
 	slugify: text => {
 		return text
 			.toLowerCase()
@@ -28,7 +32,7 @@ const utils = {
 		for (let i in data) {
 			if (data[i] === undefined || data[i] === null ||
 				(Array.isArray(data[i]) && !data[i].length) ||
-				(typeof data[i] === 'object' && !Object.keys(data[i]).length)) {
+				(utils.isObject(data[i]) && !Object.keys(data[i]).length)) {
 				delete data[i]
 			}
 		}
@@ -48,11 +52,6 @@ const utils = {
 			console.error(err)
 			console.error('Invalid URL:', urlString)
 		}
-	},
-
-	compareArrays: (arr1, arr2) => {
-		return Array.isArray(arr1) && Array.isArray(arr2) &&
-			arr1.filter(i => arr2.includes(i)).length > 0
 	}
 }
 

@@ -23,7 +23,7 @@ Serverless [Micropub](https://indieweb.org/Micropub) server that accepts `CREATE
 
 If your static site's repository is on [GitLab](https://gitlab.com), fork this repo instead and change the imports in [src/media.js](src/media.js) and [src/libs/publish.js](src/libs/publish.js) to `gitlab`.
 
-Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also be deployed and it should be setup to run with a GitLab repository.
+~~Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also be deployed and it should be setup to run with a GitLab repository.~~ **No longer updating**.
 
 ## Environment Variables
 ### Required
@@ -43,6 +43,8 @@ Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also b
 ### Optional
 | name | description | default |
 | --- | --- | --- |
+| SYNDICATE_TO | JSON string (single object or array) of [syndication targets](https://www.w3.org/TR/micropub/#syndication-targets) | [] |
+| --- | --- | --- |
 | GIT_AUTHOR_EMAIL | Author email for commits | `GIT_TOKEN` owner's email |
 | GIT_AUTHOR_NAME | Author name for commits | `GIT_TOKEN` owner's name |
 | --- | --- | --- |
@@ -51,6 +53,7 @@ Alternatively, the [GitLab repo](https://gitlab.com/benjifs/micropub) can also b
 | MEDIA_DIR | Directory where media is uploaded to | `uploads` |
 | --- | --- | --- |
 | PERMANENT_DELETE | If set, a `delete` action will delete the file from the repo | File will be "marked" as deleted and the static site generator handles not rendering the file |
+| FILENAME_FULL_DATE | If true, filename will have the date prepended in the format `YYYY-MM-DD`. See [Jekyll Posts](https://jekyllrb.com/docs/posts/) | |
 
 ### Additional Environment Variables
 * `DEBUG`: Will prevent `POST`, `PUT`, and `DELETE` requests to go to GitHub or GitLab. Only used for debugging.
@@ -65,6 +68,8 @@ The current supported content types are:
 * [rsvp](https://indieweb.org/rsvp) - `/CONTENT_DIR/rsvp/`
 * [reply](https://indieweb.org/reply) - `/CONTENT_DIR/notes/`
 
+> **Note:** If a post does not fit under a specific type, it will default to be of type `note`
+
 ## Scopes
 * create - allows the client to create posts on behalf of the user
 * update - allows the client to edit existing posts
@@ -75,6 +80,7 @@ The current supported content types are:
 ## Troubleshooting
 * `GIT_BRANCH` should already exist
 * `ME` should have a trailing slash
+* If you make a change to the environment variables in Netlify, you must redeploy otherwise it will continue using the old variables.
 
 ## TODO
 * Separate the GitHub and GitLab functions (maybe as their own npm packages)

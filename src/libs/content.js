@@ -1,22 +1,40 @@
 
 import { utils } from './utils'
 
+const renameProperties = {
+	'name': 'title',
+	'category': 'tags'
+}
+
+const ignoreProperties = [
+	'content', 'photo'
+]
+
 const content = {
 	output: data => {
 		if (!data) {
 			return null
 		}
+
+		let fm = ''
+		for (let [key, value] of Object.entries(data)) {
+			if (ignoreProperties.includes(key)) {
+				continue
+			}
+			if (renameProperties[key]) {
+				key = renameProperties[key]
+			}
+			if (key == 'tags' && value && value.length) {
+				fm += `${key}:\n - ${value.join('\n - ')}\n`
+			} else if (key == 'title') { // Always force title to have double quotes
+				fm += `${key}: "${value}"\n`
+			} else {
+				fm += `${key}: ${value}\n`
+			}
+		}
+
 		return '---\n' +
-			`date: ${data.date}\n` +
-			(data.name ? `title: "${data.name}"\n` : '') +
-			(data.category && data.category.length ? `tags:\n - ${data.category.join('\n - ')}\n` : '') +
-			(data.draft ? 'draft: true\n' : '') +
-			(data.updated ? `updated: ${data.updated}\n` : '') +
-			(data['like-of'] ? `like-of: ${data['like-of']}\n` : '') +
-			(data['bookmark-of'] ? `bookmark-of: ${data['bookmark-of']}\n` : '') +
-			(data['in-reply-to'] ? `in-reply-to: ${data['in-reply-to']}\n` : '') +
-			(data['rsvp'] ? `rsvp: ${data['rsvp']}\n` : '') +
-			(data['deleted'] ? 'deleted: true\n' : '') +
+			fm +
 			'---\n\n' +
 			`${data.content || ''}`
 	},
@@ -32,26 +50,31 @@ const content = {
 			data.updated = date.toISOString()
 		}
 		const type = content.getType(data) || ''
-		let slug
-		if (data.slug) {
-			slug = `${type}/${utils.slugify(data.slug)}`
-		} else {
-			const ts = Math.round(date / 1000)
-			slug = `${type}/${ts}` + (data.name ? `-${utils.slugify(data.name)}` : '')
+		let slugParts = []
+		if (process.env.FILENAME_FULL_DATE) { // Jekyll post filenames must have YYYY-MM-DD in the filename
+			slugParts.push(date.toISOString().substr(0, 10)) // or split('T')[0]
 		}
+		if (data.slug) {
+			slugParts.push(utils.slugify(data.slug))
+		} else if (data.name) {
+			slugParts.push(utils.slugify(data.name))
+		} else {
+			slugParts.push(Math.round(date / 1000))
+		}
+		const slug = slugParts.join('-')
 		const dir = (process.env.CONTENT_DIR || 'src').replace(/\/$/, '')
-		const filename = `${dir}/${slug}.md`
+		const filename = `${dir}/${type}/${slug}.md`
 
 		return {
 			'filename': filename,
-			'slug': slug,
+			'slug': `${type}/${slug}`,
 			'formatted': content.output(data),
 			'data': data
 		}
 	},
 
 	getType: data => {
-		if (!data || typeof data !== 'object' || !Object.keys(data).length) {
+		if (!utils.objectHasKeys(data)) {
 			return null
 		}
 		if (data['like-of']) {

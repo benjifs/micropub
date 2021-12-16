@@ -105,4 +105,45 @@ describe('utils', () => {
 			expect(res).not.toHaveProperty('four')
 		})
 	})
+
+	describe('isObject', () => {
+		test('undefined', () => {
+			expect(utils.isObject()).toBeFalsy()
+		})
+
+		test('Boolean', () => {
+			expect(utils.isObject(true)).toBeFalsy()
+		})
+
+		test('String', () => {
+			expect(utils.isObject('hello')).toBeFalsy()
+		})
+
+		test('Number', () => {
+			expect(utils.isObject(1)).toBeFalsy()
+		})
+
+		test('Empty Array', () => {
+			expect(utils.isObject([])).toBeFalsy()
+		})
+
+		test('Array', () => {
+			expect(utils.isObject(['1', '2'])).toBeFalsy()
+		})
+
+		test('Empty Object', () => {
+			expect(utils.isObject({})).toBeTruthy()
+		})
+
+		test('Object', () => {
+			expect(utils.isObject({'one': 1, 'two': 2})).toBeTruthy()
+		})
+	})
+
+	describe('objectHasKeys', () => {
+		test('is object and has keys', () => {
+			expect(utils.objectHasKeys({})).toBeFalsy()
+			expect(utils.objectHasKeys({'one': 1, 'two': 2})).toBeTruthy()
+		})
+	})
 })

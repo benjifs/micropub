@@ -42,7 +42,7 @@ export default {
 					} else if (propKey.startsWith('mp-')) {
 						propKey = propKey.slice(3)
 					}
-					if (propKey == 'category') {
+					if (['category', 'syndicate-to'].includes(propKey)) {
 						parsed[propKey] = itemsToArray(propValue)
 					} else {
 						parsed[propKey] = getPropertyValue(propValue)

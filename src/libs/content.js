@@ -24,7 +24,7 @@ const content = {
 			if (renameProperties[key]) {
 				key = renameProperties[key]
 			}
-			if (key == 'tags' && value && value.length) {
+			if (Array.isArray(value) && value.length) {
 				fm += `${key}:\n - ${value.join('\n - ')}\n`
 			} else if (key == 'title') { // Always force title to have double quotes
 				fm += `${key}: "${value}"\n`

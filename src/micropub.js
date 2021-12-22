@@ -36,18 +36,23 @@ const getHandler = async query => {
 }
 
 const micropubFn = async event => {
-	if (event.httpMethod == 'GET') {
-		return getHandler(event.queryStringParameters)
-	}
-	if (event.httpMethod !== 'POST') {
+	if (!['GET', 'POST'].includes(event.httpMethod)) {
 		return Response.error(Error.NOT_ALLOWED)
 	}
 
 	const { headers, body } = event
+	const scopes = await auth.isAuthorized(headers, body)
+	if (!scopes || scopes.error) {
+		return Response.error(scopes)
+	}
+
+	if (event.httpMethod === 'GET') {
+		return getHandler(event.queryStringParameters)
+	}
+
 	const action = (body.action || 'create').toLowerCase()
-	const error = await auth.isAuthorized(headers, body, action)
-	if (error) {
-		return Response.error(error)
+	if (!auth.isValidScope(scopes, action)) {
+		return Response.error(Error.SCOPE)
 	}
 
 	let res

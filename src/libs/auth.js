@@ -30,7 +30,7 @@ const Auth = {
 		const token = (headers && headers.authorization && headers.authorization.split(' ')[1]) || (body && body['access_token'])
 		return token || Error.UNAUTHORIZED
 	},
-	isAuthorized: async (headers, body, requiredScopes) => {
+	isAuthorized: async (headers, body) => {
 		console.log('HEADERS:', headers)
 		console.log('BODY:', body)
 		if (headers.authorization && headers.authorization.split(' ')[1] && body['access_token']) {
@@ -44,9 +44,7 @@ const Auth = {
 		if (!auth || auth.me != process.env.ME) {
 			return Error.FORBIDDEN
 		}
-		if (!Auth.isValidScope(auth.scope, requiredScopes)) {
-			return Error.SCOPE
-		}
+		return auth.scope
 	}
 }
 

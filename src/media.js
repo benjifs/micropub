@@ -48,17 +48,23 @@ const getHandler = async query => {
 }
 
 const mediaFn = async event => {
-	if (event.httpMethod == 'GET') {
-		return getHandler(event.queryStringParameters)
-	}
-	if (event.httpMethod !== 'POST') {
+	if (!['GET', 'POST'].includes(event.httpMethod)) {
 		return Response.error(Error.NOT_ALLOWED)
 	}
 
 	const { headers, body } = event
-	const error = await auth.isAuthorized(headers, body, 'media create')
-	if (error) {
-		return Response.error(error)
+	const scopes = await auth.isAuthorized(headers, body)
+	if (!scopes || scopes.error) {
+		return Response.error(scopes)
+	}
+
+	if (event.httpMethod === 'GET') {
+		return getHandler(event.queryStringParameters)
+	}
+
+	const action = (body.action || 'media create').toLowerCase()
+	if (!auth.isValidScope(scopes, action)) {
+		return Response.error(Error.SCOPE)
 	}
 
 	const file = body.file || body.photo

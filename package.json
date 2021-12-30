@@ -1,6 +1,6 @@
 {
   "name": "micropub",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "Serverless Micropub and media endpoints to publish to static site",
   "main": "src/micropub.js",
   "scripts": {
@@ -36,8 +36,8 @@
     "@middy/http-urlencode-body-parser": "^2.5.1",
     "article-title": "^4.1.0",
     "dotenv": "^10.0.0",
-    "front-matter": "^4.0.2",
     "got": "^11.8.2",
+    "gray-matter": "^4.0.3",
     "netlify-lambda": "^2.0.14"
   },
   "devDependencies": {

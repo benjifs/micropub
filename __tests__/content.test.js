@@ -7,16 +7,15 @@ describe('content', () => {
 	let data
 
 	const output = '---\n' +
-	'date: 2021-09-09T12:23:34.120Z\n' +
-	'title: "Title"\n' +
+	'date: \'2021-09-09T12:23:34.120Z\'\n' +
+	'title: Title\n' +
 	'tags:\n' +
-	' - one\n' +
-	' - two\n' +
-	' - three\n' +
-	'updated: 2021-10-09T12:23:34.120Z\n' +
+	'  - one\n' +
+	'  - two\n' +
+	'  - three\n' +
+	'updated: \'2021-10-09T12:23:34.120Z\'\n' +
 	'---\n' +
-	'\n' +
-	'This is the content'
+	'This is the content\n'
 
 	beforeEach(() => {
 		data = {

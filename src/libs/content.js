@@ -1,4 +1,5 @@
 
+import matter from 'gray-matter'
 import { utils } from './utils'
 
 const renameProperties = {
@@ -16,27 +17,14 @@ const content = {
 			return null
 		}
 
-		let fm = ''
+		let output = {}
 		for (let [key, value] of Object.entries(data)) {
-			if (ignoreProperties.includes(key)) {
-				continue
-			}
-			if (renameProperties[key]) {
-				key = renameProperties[key]
-			}
-			if (Array.isArray(value) && value.length) {
-				fm += `${key}:\n - ${value.join('\n - ')}\n`
-			} else if (key == 'title') { // Always force title to have double quotes
-				fm += `${key}: "${value}"\n`
-			} else {
-				fm += `${key}: ${value}\n`
+			if (!ignoreProperties.includes(key)) {
+				output[renameProperties[key] || key] = value
 			}
 		}
 
-		return '---\n' +
-			fm +
-			'---\n\n' +
-			`${data.content || ''}`
+		return matter.stringify(data.content || '', output)
 	},
 
 	format: data => {

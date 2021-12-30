@@ -1,6 +1,6 @@
 
 import articleTitle from 'article-title'
-import fm from 'front-matter'
+import matter from 'gray-matter'
 import got from 'got'
 import { utils } from './utils'
 
@@ -82,7 +82,8 @@ export default {
 	},
 
 	fromFrontMatter: data => {
-		const { attributes, body } = fm(data.toString())
+		const fm = matter(data.toString())
+		const attributes = fm.data
 		const parsed = {}
 
 		for (let [key, value] of Object.entries(attributes)) {
@@ -97,7 +98,7 @@ export default {
 			}
 		}
 		parsed['type'] = parsed['type'] || 'h-entry'
-		parsed['content'] = body
+		parsed['content'] = fm.content.trim()
 
 		return utils.removeEmpty(parsed)
 	},

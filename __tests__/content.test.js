@@ -165,4 +165,12 @@ describe('content', () => {
 			expect(content.getType({})).not.toBe('notes')
 		})
 	})
+
+	describe('client_id', () => {
+		test('standard post', () => {
+			const clientId = 'http://example.com'
+			const fm = content.output(data, clientId)
+			expect(fm).toContain(`\nclient_id: '${clientId}'`)
+		})
+	})
 })

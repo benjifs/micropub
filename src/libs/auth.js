@@ -44,7 +44,7 @@ const Auth = {
 		if (!auth || auth.me != process.env.ME) {
 			return Error.FORBIDDEN
 		}
-		return auth.scope
+		return auth
 	}
 }
 

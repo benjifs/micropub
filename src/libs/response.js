@@ -9,29 +9,25 @@ const Error = {
 }
 
 const Response = {
-	send: (code, body, headers) => {
-		return {
-			'statusCode': code,
-			'headers': {
-				'Content-Type': 'application/json',
-				...headers
-			},
-			'body': body ? JSON.stringify(body) : 'success'
-		}
-	},
-	sendLocation: (location, sendBody) => {
-		return Response.send(201, sendBody ? {
+	send: (code, body, headers) => ({
+		'statusCode': code,
+		'headers': {
+			...(body && { 'Content-Type': 'application/json' }),
+			...headers
+		},
+		'body': body ? JSON.stringify(body) : 'success'
+	}),
+	sendLocation: (location, sendBody) =>
+		Response.send(201, sendBody ? {
 			'url': location
 		} : null, {
 			'Location': location
-		})
-	},
-	error: (type, description) => {
-		return Response.send(type.statusCode, {
+		}),
+	error: (type, description) =>
+		Response.send(type.statusCode, {
 			'error': type.error,
 			'error_description': description
 		})
-	}
 }
 
 export { Error, Response }

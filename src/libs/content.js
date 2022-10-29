@@ -12,7 +12,7 @@ const ignoreProperties = [
 ]
 
 const content = {
-	output: data => {
+	output: (data, clientId) => {
 		if (!data) {
 			return null
 		}
@@ -23,11 +23,14 @@ const content = {
 				output[renameProperties[key] || key] = value
 			}
 		}
+		if (clientId) {
+			output['client_id'] = clientId
+		}
 
 		return matter.stringify(data.content || '', output)
 	},
 
-	format: data => {
+	format: (data, clientId) => {
 		if (!data) {
 			return null
 		}
@@ -56,7 +59,7 @@ const content = {
 		return {
 			'filename': filename,
 			'slug': `${type}/${slug}`,
-			'formatted': content.output(data),
+			'formatted': content.output(data, clientId),
 			'data': data
 		}
 	},

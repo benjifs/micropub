@@ -41,23 +41,26 @@ const micropubFn = async event => {
 	}
 
 	const { headers, body } = event
-	const scopes = await auth.isAuthorized(headers, body)
-	if (!scopes || scopes.error) {
-		return Response.error(scopes)
+	const authResponse = await auth.isAuthorized(headers, body)
+	console.log('authResponse', authResponse)
+	if (!authResponse || authResponse.error) {
+		return Response.error(authResponse)
 	}
+	// eslint-disable-next-line camelcase
+	const { client_id, scope } = authResponse
 
 	if (event.httpMethod === 'GET') {
 		return getHandler(event.queryStringParameters)
 	}
 
 	const action = (body.action || 'create').toLowerCase()
-	if (!auth.isValidScope(scopes, action)) {
+	if (!scope || !auth.isValidScope(scope, action)) {
 		return Response.error(Error.SCOPE)
 	}
 
 	let res
 	if (action == 'create') {
-		res = await publish.addContent(body, headers['content-type'] == 'application/json')
+		res = await publish.addContent(body, headers['content-type'] == 'application/json', client_id)
 	} else if (action == 'update') {
 		res = await publish.updateContent(body.url, body)
 	} else if (action == 'delete') {

@@ -53,17 +53,18 @@ const mediaFn = async event => {
 	}
 
 	const { headers, body } = event
-	const scopes = await auth.isAuthorized(headers, body)
-	if (!scopes || scopes.error) {
-		return Response.error(scopes)
+	const authResponse = await auth.isAuthorized(headers, body)
+	if (!authResponse || authResponse.error) {
+		return Response.error(authResponse)
 	}
+	const { scope } = authResponse
 
 	if (event.httpMethod === 'GET') {
 		return getHandler(event.queryStringParameters)
 	}
 
 	const action = (body.action || 'media create').toLowerCase()
-	if (!auth.isValidScope(scopes, action)) {
+	if (!scope || !auth.isValidScope(scope, action)) {
 		return Response.error(Error.SCOPE)
 	}
 

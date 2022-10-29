@@ -5,7 +5,7 @@
   "main": "src/micropub.js",
   "scripts": {
     "clean": "rm -rf node_modules lambda",
-    "serve": "netlify-lambda serve src",
+    "serve": "netlify-lambda serve src --port 9001",
     "esbuild": "esbuild src/*.js --bundle --outdir=lambda --platform=node",
     "build": "netlify-lambda build src",
     "lint": "eslint src/**/*.js",

@@ -79,7 +79,7 @@ const handleUpdate = (body, parsed) => {
 const publish = {
 	handleUpdate: handleUpdate,
 
-	addContent: async (data, isJSON) => {
+	addContent: async (data, isJSON, clientId) => {
 		const parsed = isJSON ? parse.fromJSON(data) : parse.fromForm(data)
 		console.log('└─>', parsed)
 		if (parsed && parsed['like-of']) {
@@ -100,7 +100,7 @@ const publish = {
 		if (!utils.objectHasKeys(parsed)) {
 			return { 'error': 'nothing to add' }
 		}
-		const out = content.format(parsed)
+		const out = content.format(parsed, clientId)
 		if (!out || !out.filename || !out.formatted) {
 			return { 'error': 'could not parse data' }
 		}

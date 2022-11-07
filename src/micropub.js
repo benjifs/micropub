@@ -60,7 +60,7 @@ const micropubFn = async event => {
 
 	let res
 	if (action == 'create') {
-		res = await publish.addContent(body, headers['content-type'] == 'application/json', client_id)
+		res = await publish.addContent(body, headers['content-type'].indexOf('application/json') >= 0, client_id)
 	} else if (action == 'update') {
 		res = await publish.updateContent(body.url, body)
 	} else if (action == 'delete') {

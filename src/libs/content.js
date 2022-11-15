@@ -80,6 +80,9 @@ const content = {
 		if (data['name']) {
 			return 'articles'
 		}
+		if (data['u-watch-of']) {
+			return 'watched'
+		}
 		return 'notes'
 	},
 

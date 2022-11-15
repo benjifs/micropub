@@ -54,7 +54,7 @@ describe('publish', () => {
 			const getPageTitle = jest.spyOn(parse, 'getPageTitle')
 			getPageTitle.mockReturnValue('PAGE TITLE')
 
-			entry['like-of'] = 'https://domain.tld'
+			entry['like-of'] = likedURL
 			const res = await publish.addContent(entry)
 			expect(getPageTitle.mock.calls.length).toBe(1)
 			expect(res).toHaveProperty('filename')
@@ -63,7 +63,7 @@ describe('publish', () => {
 
 		test('add bookmark', async () => {
 			entry['name'] = 'Title'
-			entry['bookmark-of'] = 'https://domain.tld'
+			entry['bookmark-of'] = likedURL
 			const res = await publish.addContent(entry)
 			expect(res).toHaveProperty('filename')
 			expect(res.filename).toContain('bookmarks/')
@@ -83,6 +83,13 @@ describe('publish', () => {
 			const res = await publish.addContent(entry)
 			expect(res).toHaveProperty('filename')
 			expect(res.filename).toContain('rsvp/')
+		})
+
+		test('add watched note', async () => {
+			entry['u-watch-of'] = likedURL
+			const res = await publish.addContent(entry)
+			expect(res).toHaveProperty('filename')
+			expect(res.filename).toContain('watched/')
 		})
 	})
 

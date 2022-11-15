@@ -66,6 +66,7 @@ The current supported content types are:
 * [like](https://indieweb.org/like) - `/CONTENT_DIR/likes/`
 * [note](https://indieweb.org/note) - `/CONTENT_DIR/notes/`
 * [rsvp](https://indieweb.org/rsvp) - `/CONTENT_DIR/rsvp/`
+* [watch](https://indieweb.org/watch) - `/CONTENT_DIR/watched/`
 * [reply](https://indieweb.org/reply) - `/CONTENT_DIR/notes/`
 
 > **Note:** If a post does not fit under a specific type, it will default to be of type `note`

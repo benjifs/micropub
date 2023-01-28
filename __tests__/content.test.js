@@ -91,6 +91,13 @@ describe('content', () => {
 			expect(formatted.data).toHaveProperty('date')
 		})
 
+		test('treat "published" as "date" and add "updated"', () => {
+			data.published = data.date
+			delete data.date
+			const formatted = content.format(data)
+			expect(formatted.data).toHaveProperty('updated')
+		})
+
 		test('set updated date', () => {
 			delete data.updated
 			const formatted = content.format(data)
@@ -161,7 +168,7 @@ describe('content', () => {
 		})
 
 		test('is watched', () => {
-			expect(content.getType({ 'u-watch-of': likedURL })).toBe('watched')
+			expect(content.getType({ 'watch-of': likedURL })).toBe('watched')
 		})
 
 		test('is note', () => {

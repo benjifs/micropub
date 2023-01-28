@@ -4,7 +4,8 @@ import { utils } from './utils'
 
 const renameProperties = {
 	'name': 'title',
-	'category': 'tags'
+	'category': 'tags',
+	'published': 'date'
 }
 
 const ignoreProperties = [
@@ -35,7 +36,7 @@ const content = {
 			return null
 		}
 		const date = new Date()
-		if (!data.date) {
+		if (!data.date && !data.published) {
 			data.date = date.toISOString()
 		} else {
 			data.updated = date.toISOString()
@@ -49,6 +50,13 @@ const content = {
 			slugParts.push(utils.slugify(data.slug))
 		} else if (data.name) {
 			slugParts.push(utils.slugify(data.name))
+		} else if (type == 'watched') {
+			slugParts.push(Math.round(date / 1000))
+			if (data['watch-of'].properties) {
+				const { name, published } = data['watch-of'].properties
+				name && name.length > 0 && slugParts.push(utils.slugify(name[0]))
+				published && published.length > 0 && slugParts.push(published[0])
+			}
 		} else {
 			slugParts.push(Math.round(date / 1000))
 		}
@@ -80,7 +88,7 @@ const content = {
 		if (data['name']) {
 			return 'articles'
 		}
-		if (data['u-watch-of']) {
+		if (data['watch-of']) {
 			return 'watched'
 		}
 		return 'notes'

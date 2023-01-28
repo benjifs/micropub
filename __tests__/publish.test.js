@@ -86,7 +86,7 @@ describe('publish', () => {
 		})
 
 		test('add watched note', async () => {
-			entry['u-watch-of'] = likedURL
+			entry['watch-of'] = likedURL
 			const res = await publish.addContent(entry)
 			expect(res).toHaveProperty('filename')
 			expect(res.filename).toContain('watched/')

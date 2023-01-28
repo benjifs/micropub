@@ -13,11 +13,6 @@ import { Error, Response } from './libs/response'
 
 const getHandler = async query => {
 	let res
-	if (query.q === 'config') {
-		return Response.send(200, {
-			'q': [ 'source' ]
-		})
-	}
 	if (query.q === 'source') {
 		// https://github.com/indieweb/micropub-extensions/issues/14
 		const opts = {

@@ -91,6 +91,9 @@ const content = {
 		if (data['watch-of']) {
 			return 'watched'
 		}
+		if (data['read-of']) {
+			return 'read'
+		}
 		return 'notes'
 	},
 

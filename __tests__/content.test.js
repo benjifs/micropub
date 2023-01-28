@@ -171,6 +171,10 @@ describe('content', () => {
 			expect(content.getType({ 'watch-of': likedURL })).toBe('watched')
 		})
 
+		test('is watched', () => {
+			expect(content.getType({ 'read-of': likedURL })).toBe('read')
+		})
+
 		test('is note', () => {
 			expect(content.getType()).not.toBe('notes')
 			expect(content.getType({})).not.toBe('notes')

@@ -91,6 +91,13 @@ describe('publish', () => {
 			expect(res).toHaveProperty('filename')
 			expect(res.filename).toContain('watched/')
 		})
+
+		test('add read note', async () => {
+			entry['read-of'] = likedURL
+			const res = await publish.addContent(entry)
+			expect(res).toHaveProperty('filename')
+			expect(res.filename).toContain('read/')
+		})
 	})
 
 	describe('addContent: FAIL', () => {

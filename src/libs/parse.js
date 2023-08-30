@@ -15,6 +15,7 @@ const getPageTitle = async urlString => {
 		return res && res.body ? articleTitle(res.body) : null
 	} catch(err) {
 		console.error('Could not parse:', urlString)
+		console.error(err)
 	}
 }
 

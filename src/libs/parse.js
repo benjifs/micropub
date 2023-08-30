@@ -12,11 +12,12 @@ const getPageTitle = async urlString => {
 	try {
 		const url = new URL(urlString)
 		const res = await got(url)
-		return res && res.body ? articleTitle(res.body) : null
+		if (res && res.body) return articleTitle(res.body)
 	} catch(err) {
 		console.error('Could not parse:', urlString)
-		console.error(err)
+		console.error(err && err.message)
 	}
+	return null
 }
 
 // Properties that should be renamed to keep a consistent structure

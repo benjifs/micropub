@@ -9,7 +9,7 @@ const renameProperties = {
 }
 
 const ignoreProperties = [
-	'content', 'photo'
+	'content'
 ]
 
 const content = {

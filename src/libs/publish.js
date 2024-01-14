@@ -86,16 +86,7 @@ const publish = {
 			parsed.name = parsed.name || await parse.getPageTitle(parsed['like-of'])
 		}
 		if (parsed && parsed.photo) {
-			const uploaded = await uploadFiles(parsed.photo)
-			if (uploaded && uploaded.length) {
-				let imageContent = ''
-				for (let img of uploaded) {
-					if (img.value) {
-						imageContent += `![${img.alt || ''}](/${img.value})\n\n`
-					}
-				}
-				parsed.content = `${imageContent}${parsed.content}`
-			}
+			parse.photo = await uploadFiles(parsed.photo)
 		}
 		if (!utils.objectHasKeys(parsed)) {
 			return { 'error': 'nothing to add' }

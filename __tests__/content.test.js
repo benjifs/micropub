@@ -6,17 +6,6 @@ describe('content', () => {
 
 	let data
 
-	const output = '---\n' +
-	'date: \'2021-09-09T12:23:34.120Z\'\n' +
-	'title: Title\n' +
-	'tags:\n' +
-	'  - one\n' +
-	'  - two\n' +
-	'  - three\n' +
-	'updated: \'2021-10-09T12:23:34.120Z\'\n' +
-	'---\n' +
-	'This is the content\n'
-
 	beforeEach(() => {
 		data = {
 			'date': '2021-09-09T12:23:34.120Z',
@@ -30,7 +19,16 @@ describe('content', () => {
 	describe('output', () => {
 		test('standard post', () => {
 			const fm = content.output(data)
-			expect(fm).toBe(output)
+			expect(fm).toBe('---\n' +
+			'date: \'2021-09-09T12:23:34.120Z\'\n' +
+			'title: Title\n' +
+			'tags:\n' +
+			'  - one\n' +
+			'  - two\n' +
+			'  - three\n' +
+			'updated: \'2021-10-09T12:23:34.120Z\'\n' +
+			'---\n' +
+			'This is the content\n')
 		})
 
 		test('deleted post', () => {
@@ -80,6 +78,22 @@ describe('content', () => {
 		test('null data', () => {
 			const fm = content.output()
 			expect(fm).toBeFalsy()
+		})
+
+		test('photo post', () => {
+			data['photo'] = [ likedURL ]
+			const fm = content.output(data)
+			expect(fm).toContain(`\nphoto:\n  - '${likedURL}'`)
+		})
+
+		test('photo post with alt text', () => {
+			data['photo'] = [{
+				value: likedURL,
+				alt: 'alt-text'
+			}]
+			const fm = content.output(data)
+			expect(fm).toContain(`\nphoto:\n  - value: '${likedURL}'`)
+			expect(fm).toContain('alt: alt-text')
 		})
 	})
 
@@ -171,7 +185,7 @@ describe('content', () => {
 			expect(content.getType({ 'watch-of': likedURL })).toBe('watched')
 		})
 
-		test('is watched', () => {
+		test('is read', () => {
 			expect(content.getType({ 'read-of': likedURL })).toBe('read')
 		})
 

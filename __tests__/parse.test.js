@@ -16,7 +16,8 @@ describe('parse', () => {
 			'bookmark-of': [ likedURL ],
 			'in-reply-to': [ likedURL ],
 			'rsvp': [ 'maybe' ],
-			'deleted': [ true ]
+			'deleted': [ true ],
+			'photo': [ likedURL ]
 		}
 	}
 
@@ -29,6 +30,7 @@ describe('parse', () => {
 		'like-of': likedURL,
 		'bookmark-of': likedURL,
 		'in-reply-to': likedURL,
+		'photo': likedURL,
 		'rsvp': 'maybe',
 		'deleted': true
 	}
@@ -114,6 +116,24 @@ describe('parse', () => {
 			expect(data.name).toBe('Title')
 			expect(data.category).toBeUndefined()
 		})
+
+		test('photo without alt json', () => {
+			const data = parse.fromJSON(json)
+			expect(data).toBeTruthy()
+			expect(data.type).toBe('h-entry')
+			expect(data.photo).toHaveLength(1)
+			expect(data.photo[0]).toBe(likedURL)
+		})
+
+		test('photo with alt json', () => {
+			json.properties.photo = [{ value: likedURL, alt: 'alt-text' }]
+			const data = parse.fromJSON(json)
+			expect(data).toBeTruthy()
+			expect(data.type).toBe('h-entry')
+			expect(data.photo).toHaveLength(1)
+			expect(data.photo[0].value).toBe(likedURL)
+			expect(data.photo[0].alt).toBeTruthy()
+		})
 	})
 
 	describe('fromForm', () => {
@@ -151,6 +171,14 @@ describe('parse', () => {
 			form2['file[]'] = ['image5']
 			const data = parse.fromForm(form2)
 			expect(data.photo).toHaveLength(5)
+		})
+
+		test('photo without alt FORM', () => {
+			const data = parse.fromForm(form)
+			expect(data).toBeTruthy()
+			expect(data.type).toBe('h-entry')
+			expect(data.photo).toHaveLength(1)
+			expect(data.photo[0]).toBe(likedURL)
 		})
 	})
 

@@ -1,6 +1,6 @@
 {
   "name": "micropub",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "Serverless Micropub and media endpoints to publish to static site",
   "main": "src/micropub.js",
   "scripts": {
@@ -8,6 +8,7 @@
     "serve": "export NODE_OPTIONS=--openssl-legacy-provider && netlify-lambda serve src --port 9001",
     "esbuild": "esbuild src/*.js --bundle --outdir=lambda --platform=node",
     "build": "netlify-lambda build src",
+    "bump": "npm --no-git-tag-version version",
     "lint": "eslint src/**/*.js",
     "test": "jest"
   },
@@ -35,17 +36,20 @@
     "@middy/http-multipart-body-parser": "^2.5.1",
     "@middy/http-urlencode-body-parser": "^2.5.1",
     "article-title": "^4.1.0",
-    "dotenv": "^16.0.3",
+    "dotenv": "^16.3.1",
     "got": "^11.8.2",
     "gray-matter": "^4.0.3",
     "netlify-lambda": "^2.0.15"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.12",
-    "@babel/preset-env": "^7.20.2",
-    "babel-jest": "^29.4.1",
-    "eslint": "^8.32.0",
-    "jest": "^29.4.1",
-    "nock": "^13.3.0"
+    "@babel/core": "^7.23.7",
+    "@babel/preset-env": "^7.23.8",
+    "babel-jest": "^29.7.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
+    "nock": "^13.4.0"
+  },
+  "overrides": {
+    "cheerio": "1.0.0-rc.10"
   }
 }

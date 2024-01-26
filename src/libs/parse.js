@@ -58,7 +58,7 @@ export default {
 	},
 
 	fromForm: form => {
-		if  (!form || !form.h) {
+		if (!form || !form.h) {
 			return null
 		}
 		const parsed = {}

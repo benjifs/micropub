@@ -189,6 +189,14 @@ describe('content', () => {
 			expect(content.getType({ 'read-of': likedURL })).toBe('read')
 		})
 
+		test('is listen', () => {
+			expect(content.getType({ 'listen-of': likedURL })).toBe('listen')
+		})
+
+		test('is play', () => {
+			expect(content.getType({ 'play-of': likedURL })).toBe('play')
+		})
+
 		test('is note', () => {
 			expect(content.getType()).not.toBe('notes')
 			expect(content.getType({})).not.toBe('notes')

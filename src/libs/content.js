@@ -46,19 +46,19 @@ const content = {
 		if (process.env.FILENAME_FULL_DATE) { // Jekyll post filenames must have YYYY-MM-DD in the filename
 			slugParts.push(date.toISOString().substr(0, 10)) // or split('T')[0]
 		}
+		// Include timestamp in filename for everything except articles
+		if (type != 'articles' && !data.slug) slugParts.push(Math.round(date / 1000))
 		if (data.slug) {
 			slugParts.push(utils.slugify(data.slug))
 		} else if (data.name) {
 			slugParts.push(utils.slugify(data.name))
-		} else if (type == 'watched') {
-			slugParts.push(Math.round(date / 1000))
-			if (data['watch-of'].properties) {
-				const { name, published } = data['watch-of'].properties
+		} else {
+			const cite = data['watch-of'] || data['read-of'] || data['listen-of'] || data['play-of']
+			if (cite && cite.properties) {
+				const { name, published } = cite.properties
 				name && name.length > 0 && slugParts.push(utils.slugify(name[0]))
 				published && published.length > 0 && slugParts.push(published[0])
 			}
-		} else {
-			slugParts.push(Math.round(date / 1000))
 		}
 		const slug = slugParts.join('-')
 		const dir = (process.env.CONTENT_DIR || 'src').replace(/\/$/, '')
@@ -73,27 +73,15 @@ const content = {
 	},
 
 	getType: data => {
-		if (!utils.objectHasKeys(data)) {
-			return null
-		}
-		if (data['like-of']) {
-			return 'likes'
-		}
-		if (data['bookmark-of']) {
-			return 'bookmarks'
-		}
-		if (data['rsvp'] && data['in-reply-to']) {
-			return 'rsvp'
-		}
-		if (data['name']) {
-			return 'articles'
-		}
-		if (data['watch-of']) {
-			return 'watched'
-		}
-		if (data['read-of']) {
-			return 'read'
-		}
+		if (!utils.objectHasKeys(data)) return null
+		if (data['like-of']) return 'likes'
+		if (data['bookmark-of']) return 'bookmarks'
+		if (data['rsvp'] && data['in-reply-to']) return 'rsvp'
+		if (data['name']) return 'articles'
+		if (data['watch-of']) return 'watched'
+		if (data['read-of']) return 'read'
+		if (data['listen-of']) return 'listen'
+		if (data['play-of']) return 'play'
 		return 'notes'
 	},
 
